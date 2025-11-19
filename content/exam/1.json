@@ -1,0 +1,49 @@
+{
+  "title": "第1回 Linuxの基礎知識",
+  "questions": [
+    {
+      "id": 1,
+      "question": "OSではないものはどれか？",
+      "options": [
+        "Ubuntu",
+        "PHP",
+        "Android", 
+        "Windows 11"
+      ],
+      "correct": 1
+    },
+    {
+      "id": 2,
+      "question": "Linuxディストリビューションについて正しい説明はどれか？",
+      "options": [
+        "すべてのLinuxディストリビューションは無料である。",
+        "WindowsやmacOSと互換性があるため、同じアプリケーションが動作する。",
+        "CUIで操作することが必須である。",
+        "Linuxカーネルにソフトウェアやツールを組み合わせてパッケージ化したもの。"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 3,
+      "question": "Linuxカーネルのライセンスはどれか？",
+      "options": [
+        "MIT License",
+        "Apache License", 
+        "GPL v2",
+        "BSD License"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 4,
+      "question": "次の説明のうち誤った文章はどれか？",
+      "options": [
+        "コンテナ技術はLinuxカーネルの機能により実現されている",
+        "Ubuntuをサーバーとして営利目的で使用する場合は配布元に使用許可をとる必要がある。",
+        "WindowsにはLinuxのプログラムやコマンドラインツールを直接実行するための機能がある。", 
+        "自分でUbuntuイメージにMITライセンスのソフトウェアをインストールして再配布する場合、そのソフトウェアに関する著作権表示とライセンス全文を再配布物に含める義務がある。"
+      ],
+      "correct": 1
+    }
+  ]
+}

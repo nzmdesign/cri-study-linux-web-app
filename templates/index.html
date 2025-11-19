@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CRI勉強会 - Linux入門</h1>
+      <div style="text-align: right; margin-top: 10px;">
+        こんにちは、{{ current_user.last_name }} {{ current_user.first_name }} さん
+      <a href="/mypage" class="btn btn-small btn-secondary">マイページ</a>
+      {% if current_user.is_admin %}
+        <a href="/admin" class="btn btn-small btn-secondary">管理画面</a>
+      {% endif %}
+      <a href="/logout" class="btn btn-small btn-secondary">ログアウト</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="exam-list">
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>事前準備 - Linuxのインストール</h2>
+          <p>Linux環境の構築方法</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/setup/windows" class="btn btn-primary">Windows向け</a>
+          <a href="/setup/mac" class="btn btn-secondary">Mac向け</a>
+        </div>
+      </div>
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>第1回 Linuxの基礎知識</h2>
+          <p>Linuxの基本概念、学習理由、学習対象者</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/text/1" class="btn btn-primary">テキスト</a>
+          <a href="/exam/1" class="btn btn-secondary">問題集</a>
+        </div>
+      </div>
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>第2回 ターミナルの基本操作</h2>
+          <p>コマンドライン、シェル、基本的なコマンドの使い方</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/text/2" class="btn btn-primary">テキスト</a>
+          <a href="/exam/2" class="btn btn-secondary">問題集</a>
+        </div>
+      </div>
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>第3回 ファイル操作</h2>
+          <p>ファイルの作成、読み込み、削除、ディレクトリ操作</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/text/3" class="btn btn-primary">テキスト</a>
+                        <a href="/exam/3" class="btn btn-secondary">問題集</a>
+        </div>
+      </div>
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>第4回 テキスト処理</h2>
+          <p>標準入出力、リダイレクト、パイプとフィルタリング</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/text/4" class="btn btn-primary">テキスト</a>
+          <a href="/exam/4" class="btn btn-secondary">問題集</a>
+        </div>
+      </div>
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>第5回 アクセス権の管理</h2>
+          <p>ファイルやディレクトリのアクセス権を管理する方法</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/text/5" class="btn btn-primary">テキスト</a>
+          <a href="/exam/5" class="btn btn-secondary">問題集</a>
+        </div>
+      </div>
+
+      <div class="exam-item">
+        <div class="exam-header">
+          <h2>第6回 ファイルの編集と実行</h2>
+          <p>vimを使ったファイルの編集方法とスクリプトの実行方法</p>
+        </div>
+        <div class="exam-actions">
+          <a href="/text/6" class="btn btn-primary">テキスト</a>
+          <a href="/exam/6" class="btn btn-secondary">問題集</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 CRI勉強会</p>
+  </footer>
+</div>
+</body>
+</html>

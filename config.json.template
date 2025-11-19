@@ -1,0 +1,10 @@
+{
+  "initial_organizations": ["東京", "福岡"],
+  "admin_user": {
+    "email": "admin@example.com",
+    "last_name": "管理者",
+    "first_name": "001",
+    "organization": "福岡",
+    "password": "Admin!123"
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ exam.title }} - Linux入門</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>{{ exam.title }}</h1>
+    </header>
+
+    <main>
+      <section id="exam-form-section">
+        <p>以下の全ての問題に回答して「送信」を押すと採点されて結果が表示されます。</p>
+
+        <form id="exam-form">
+          {% for q in exam.questions %}
+          <div class="question-block">
+            <div class="question-number">問題 {{ loop.index }}</div>
+            <div class="question-text">{{ q.question }}</div>
+            <div class="options-list">
+              {% for opt in q.options %}
+              <div class="option-item">
+                <input type="radio" name="q-{{ q.id }}" id="q-{{ q.id }}-opt-{{ loop.index0 }}" value="{{ loop.index0 }}">
+                <label for="q-{{ q.id }}-opt-{{ loop.index0 }}">{{ ['A','B','C','D'][loop.index0] }}. {{ opt }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+
+          <div style="margin-top: 20px; text-align: center;">
+            <button type="submit" id="submit-btn" class="btn btn-primary">送信</button>
+          </div>
+        </form>
+
+      </section>
+    </main>
+    <footer>
+      <div class="footer-actions">
+        <a href="/" class="btn btn-secondary">トップに戻る</a>
+      </div>
+      <p>&copy; 2025 CRI勉強会</p>
+    </footer>
+  </div>
+
+  <script>
+    const examData = {{ exam | tojson }};
+    const examId = {{ exam_id }};
+  </script>
+  <script src="{{ url_for('static', path='/js/exam.js') }}"></script>
+</body>
+</html>

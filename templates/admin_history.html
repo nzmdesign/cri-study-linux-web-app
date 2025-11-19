@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>受験履歴 - CRI勉強会</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <style>
+    .results-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .results-table th, .results-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+    .results-table th { background-color: #f0f0f0; font-weight: bold; }
+    .status-badge { 
+      padding: 2px 8px; 
+      border-radius: 12px;
+      font-weight: bold; 
+      font-size: 12px;
+      text-align: center;
+      display: inline-block;
+      min-width: 50px;
+      color: white;
+    }
+    .status-pass { 
+      background-color: #28a745; 
+    }
+    .status-fail { 
+      background-color: #dc3545; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CRI勉強会 - Linux入門</h1>
+    </header>
+
+    <main>
+      <h2>受験履歴 ({{ results|length }}件)</h2>
+      {% if results %}
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>メールアドレス</th>
+              <th>氏名</th>
+              <th>問題集</th>
+              <th>結果</th>
+              <th>正解数</th>
+              <th>実施日時</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in results %}
+            <tr>
+              <td>{{ result.user.email }}</td>
+              <td>{{ result.user.last_name }} {{ result.user.first_name }}</td>
+              <td>第{{ result.exam_id }}回</td>
+              <td>
+                {% if result.correct_count == result.total_questions %}
+                <span class="status-badge status-pass">合格</span>
+                {% else %}
+                <span class="status-badge status-fail">不合格</span>
+                {% endif %}
+              </td>
+              <td>{{ result.correct_count }} / {{ result.total_questions }}</td>
+              <td>{{ result.timestamp.strftime("%Y-%m-%d %H:%M") }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>受験履歴がありません。</p>
+      {% endif %}
+    </main>
+
+    <footer>
+      <div class="footer-actions">
+          <a href="/admin" class="btn btn-secondary">管理者ダッシュボードに戻る</a>
+      </div>
+      <p>&copy; 2025 CRI勉強会</p>
+    </footer>
+  </div>
+</body>
+</html>

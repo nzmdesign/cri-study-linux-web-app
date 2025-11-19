@@ -1,0 +1,60 @@
+{
+  "title": "第4回 テキスト処理",
+  "questions": [
+    {
+      "id": 1,
+      "question": "file.txtが存在する場合、「cat file.txt | wc -l」コマンドの動作として正しいものはどれか？",
+      "options": [
+        "ファイルの内容を表示した後、行数をカウントする",
+        "ファイルの内容と行数を同時に表示する",
+        "ファイルの行数のみを表示する",
+        "ファイルの内容をカウントしてから表示する"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 2,
+      "question": "「cat access.log | grep 'ERROR' | wc -l 2> /dev/null」このコマンドの説明として誤っているものはどれか？",
+      "options": [
+        "access.logからERRORを含む行の数を表示し、その行数を表示する",
+        "grepコマンドでERRORを含む行が0行の場合、wcコマンドは0を表示する",
+        "access.logが存在しない場合でも、grepコマンドとwcコマンドは実行される",
+        "このコマンドの標準エラー出力はすべて/dev/nullにリダイレクトする"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 3,
+      "question": "次のうち、動作が異なるコマンドはどれか？",
+      "options": [
+        "sed -n '1,10p' file.txt",
+        "cat file.txt | head",
+        "head -n 10 file.txt",
+        "tail file.txt | sort -r"
+      ],
+      "correct": 3
+    },
+    {
+      "id": 4,
+      "question": "「echo 'Hello' > file.txt」を実行した後に「echo 'Bye' > file.txt」を実行した場合、file.txtの内容はどうなるか？ここで、file.txtは最初のコマンドで新規作成されるものとする。",
+      "options": [
+        "一行目に「Hello」が記述される",
+        "一行目に「HelloBye」が記述される",
+        "一行目に「Bye」が記述される",
+        "一行目に「Hello」、二行目に「Bye」が記述される"
+      ],
+      "correct": 2
+    },
+    {
+      "id": 5,
+      "question": "nonexistent.txtが存在しない場合、「ls nonexistent.txt | grep txt」を実行した場合、エラーメッセージの扱いはどうなるか？",
+      "options": [
+        "lsコマンドの標準エラー出力として画面に表示される",
+        "grepコマンドの標準出力として画面に表示される",
+        "パイプがエラーとして認識して、パイプの機能で標準エラー出力を画面に表示する",
+        "grepコマンドの標準エラー出力として画面に表示される"
+      ],
+      "correct": 0
+    }
+  ]
+}

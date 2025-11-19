@@ -1,0 +1,580 @@
+/* リセットCSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 基本スタイル */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #000;
+    background-color: #fff;
+    font-size: 16px;
+}
+
+/* コンテナ */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダー */
+header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border: 3px solid #000;
+    padding: 15px;
+    display: inline-block;
+}
+
+header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* メイン */
+main {
+    flex: 1;
+}
+
+/* ボタン */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 2px solid #000;
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.btn-secondary {
+    background-color: #fff;
+    color: #000;
+}
+
+.btn-large {
+    padding: 18px 36px;
+    font-size: 1.2rem;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+/* 問題集一覧 */
+.exam-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.exam-item {
+    border: 2px solid #000;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exam-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.exam-header p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.exam-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* プログレスバー */
+.progress-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.progress-bar {
+    width: 300px;
+    height: 8px;
+    border: 2px solid #000;
+    background-color: #fff;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #000;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* 画面表示制御 */
+.screen {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 開始画面 */
+.start-content {
+    text-align: center;
+    padding: 50px 20px;
+    border: 2px solid #000;
+}
+
+.start-content h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.start-content p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+/* 問題画面 */
+.question-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.question-number {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.question-number span {
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 2px solid #000;
+    padding: 10px 20px;
+    display: inline-block;
+}
+
+.question-text {
+    border: 2px solid #000;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.question-text p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+
+/* ラジオボタンのスタイル */
+.option-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.option-radio {
+    display: none;
+}
+
+.option-label {
+    width: 100%;
+    padding: 20px;
+    border: 2px solid #000;
+    background-color: #fff;
+    color: #000;
+    font-size: 1.1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    display: block;
+}
+
+.option-label:hover {
+    background-color: #f0f0f0;
+}
+
+.option-radio:checked + .option-label {
+    background-color: #000;
+    color: #fff;
+}
+
+.option-number {
+    font-weight: bold;
+    margin-right: 10px;
+    display: inline-block;
+    min-width: 25px;
+}
+
+/* 1ページ試験フォーム */
+#exam-form-section {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+#exam-form-section > p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 2px solid #000;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.question-block {
+    margin-bottom: 40px;
+    padding: 25px;
+    border: 2px solid #000;
+    background-color: #fff;
+}
+
+.question-number {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #000;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+    display: inline-block;
+    border: 2px solid #000;
+}
+
+.question-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 2px solid #000;
+    background-color: #f9f9f9;
+    text-align: left;
+}
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.options-list .option-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.options-list .option-item input[type="radio"] {
+    display: none;
+}
+
+.options-list .option-item label {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #000;
+    background-color: #fff;
+    color: #000;
+    font-size: 1.0rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    display: block;
+}
+
+.options-list .option-item label:hover {
+    background-color: #f0f0f0;
+}
+
+.options-list .option-item input[type="radio"]:checked + label {
+    background-color: #000;
+    color: #fff;
+}
+
+/* 結果エリア */
+#result-area {
+    margin-top: 40px;
+    padding: 30px;
+    border: 3px solid #000;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+#result-area h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+#result-area p {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* 結果ページ */
+.result-section {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.result-summary {
+    margin-bottom: 40px;
+    padding: 30px;
+    border: 3px solid #000;
+    background-color: #f9f9f9;
+}
+
+.result-status {
+    margin-bottom: 30px;
+}
+
+.result-status h2 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.result-status.pass h2 {
+    color: #28a745;
+}
+
+.result-status.fail h2 {
+    color: #dc3545;
+}
+
+.score-display {
+    margin-top: 20px;
+}
+
+.score-text {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+
+/* 終了画面 */
+.end-content {
+    text-align: center;
+    padding: 50px 20px;
+    border: 2px solid #000;
+}
+
+.end-content h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.score-display {
+    margin-bottom: 30px;
+}
+
+.score-text {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.percentage-text {
+    font-size: 1.3rem;
+    color: #666;
+}
+
+.end-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+
+
+/* ローディング */
+.loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+}
+
+.error-content {
+    text-align: center;
+    padding: 50px 20px;
+    border: 2px solid #000;
+}
+
+.error-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.error-content p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+/* フッター */
+footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #000;
+    text-align: center;
+}
+
+.footer-actions {
+    margin-bottom: 20px;
+}
+
+footer p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+        padding: 10px;
+    }
+    
+    .exam-item {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .exam-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .end-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .progress-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .progress-bar {
+        width: 100%;
+    }
+    
+    .question-block {
+        padding: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .question-number {
+        font-size: 1.0rem;
+        padding: 6px 12px;
+    }
+    
+    .question-text {
+        font-size: 1.1rem;
+        padding: 15px;
+    }
+    
+    .options-list .option-item label {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    #result-area {
+        padding: 20px;
+    }
+    
+    #result-area h2 {
+        font-size: 1.5rem;
+    }
+    
+    #result-area p {
+        font-size: 1.2rem;
+    }
+    
+    .result-status h2 {
+        font-size: 2rem;
+    }
+    
+    .score-text {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .question-text p {
+        font-size: 1.1rem;
+    }
+    
+    .option-btn {
+        padding: 15px;
+        font-size: 1rem;
+    }
+    
+
+}
