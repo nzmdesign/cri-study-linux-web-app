@@ -219,6 +219,36 @@ async def text_page(
     except Exception as e:
         raise HTTPException(status_code=500, detail="ファイルの読み込みエラー")
 
+# 演習ページ
+@app.get("/practice/{practice_id}", response_class=HTMLResponse)
+async def practice_page(
+    request: Request,
+    practice_id: int,
+    current_user: User = Depends(get_current_user)
+    ):
+    if not current_user:
+        return RedirectResponse(url='/login', status_code=302)
+
+    file_path = f"content/practice/{practice_id}.html"
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="テキストが見つかりません")
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+
+        # タイトルを設定
+        title = f"第{practice_id}回演習"
+
+        return templates.TemplateResponse("content.html", {
+            "request": request,
+            "content": html_content,
+            "title": title
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="ファイルの読み込みエラー")
+
 # 環境構築ページ
 @app.get("/setup/{setup_type}", response_class=HTMLResponse)
 async def setup_page(
