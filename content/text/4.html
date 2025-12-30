@@ -1,0 +1,183 @@
+<h1>第4回 テキスト処理</h1>
+<h2>環境変数</h2>
+<p>システムの設定や動作を制御するための変数です。アプリケーションやシェルが参照できる名前と値のペアで構成されており、システム全体やユーザーセッション全体で共有される情報を格納しています。環境変数を使用することで、パスの設定、プログラムの動作設定、ユーザー情報の管理などを行うことができます。</p>
+<p>環境変数は通常、<strong>大文字</strong>で命名されます。よく使用される環境変数には以下のようなものがあります：</p>
+<ul>
+<li><strong><code>PATH</code></strong>: コマンドを検索するディレクトリのリスト</li>
+<li><strong><code>HOME</code></strong>: ユーザーのホームディレクトリのパス  </li>
+<li><strong><code>USER</code></strong>: 現在のユーザー名</li>
+<li><strong><code>SHELL</code></strong>: 使用しているシェルのパス</li>
+</ul>
+<p>環境変数の値を確認するには、<code>echo</code>コマンドと<code>$</code>記号を使用します。</p>
+<blockquote>
+<p>$ echo $HOME</p>
+</blockquote>
+<p>すべての環境変数を一覧表示するには<code>env</code>コマンドを使用します。</p>
+<blockquote>
+<p>$ env</p>
+<p>📝 <strong>メモ</strong>: 環境変数は設定ファイル（<code>.bashrc</code>、<code>.profile</code>など）で定義されることが多く、システム起動時やユーザーログイン時に自動的にこれらのファイルを読み込んで環境変数を設定しています。</p>
+</blockquote>
+<h3>echo</h3>
+<p>文字列や変数の内容を画面に表示するコマンドです。引数として指定した文字列をそのまま標準出力に表示します。</p>
+<blockquote>
+<p>$ echo "Hello, World!"</p>
+<p>$ echo 'こんにちは'</p>
+<p>$ echo $HOME              # 環境変数の値を表示</p>
+<p>$ echo "私のホームディレクトリは $HOME です"</p>
+</blockquote>
+<p><code>echo</code>コマンドには便利なオプションがあります：</p>
+<ul>
+<li><strong><code>-n</code></strong>: 改行を出力しない</li>
+<li><strong><code>-e</code></strong>: エスケープシーケンス（\n、\tなど）を解釈する</li>
+</ul>
+<blockquote>
+<p>$ echo -n "改行なし"</p>
+<p>$ echo -e "1行目\n2行目\n3行目"</p>
+<p>💡 <strong>ヒント</strong>: シングルクォート（'）とダブルクォート（"）の違いに注意してください。ダブルクォート内では変数が展開されますが、シングルクォート内では文字列として扱われます。</p>
+</blockquote>
+<h2>標準入力・標準出力・標準エラー出力</h2>
+<p>Linuxのプロセスには3つの標準的な入出力ストリームがあります。これらはプロセス間でのデータのやり取りを行う仕組みです。</p>
+<h3>標準入力（stdin）</h3>
+<p>プログラムがデータを受け取る入力源です。通常はキーボードからの入力になります。ファイルディスクリプタ番号は<strong>0</strong>です。</p>
+<h3>標準出力（stdout）</h3>
+<p>プログラムが正常な結果を出力する出力先です。通常は画面（ターミナル）に表示されます。ファイルディスクリプタ番号は<strong>1</strong>です。</p>
+<h3>標準エラー出力（stderr）</h3>
+<p>プログラムがエラーメッセージを出力する出力先です。通常は画面に表示されますが、標準出力とは区別されます。ファイルディスクリプタ番号は<strong>2</strong>です。</p>
+<blockquote>
+<p>🔍 <strong>詳細</strong>: ファイルディスクリプタは、プロセスが開いているファイルやストリームを識別するための番号です。0、1、2はそれぞれ標準入力、標準出力、標準エラー出力として予約されています。</p>
+</blockquote>
+<h2>リダイレクト</h2>
+<p>標準入力、標準出力、標準エラー出力を別の場所（主にファイル）に転送する機能です。コマンドの出力をファイルに保存したり、ファイルの内容をコマンドの入力として使用したりできます。</p>
+<h3>出力リダイレクト（&gt;）</h3>
+<p>標準出力をファイルに書き込みます。ファイルが存在する場合は上書きされます。</p>
+<blockquote>
+<p>$ echo "テストメッセージ" &gt; output.txt</p>
+<p>$ ls -l &gt; file_list.txt</p>
+</blockquote>
+<h3>追記リダイレクト（&gt;&gt;）</h3>
+<p>標準出力をファイルに追記します。ファイルが存在する場合は末尾に追加されます。</p>
+<blockquote>
+<p>$ echo "1行目" &gt; log.txt      # 新規作成または上書き</p>
+<p>$ echo "2行目" &gt;&gt; log.txt     # 追記される</p>
+</blockquote>
+<h3>入力リダイレクト（&lt;）</h3>
+<p>ファイルの内容を標準入力として使用します。</p>
+<blockquote>
+<p>$ sort &lt; names.txt        # names.txtの内容を並び替え（ソート）</p>
+<p>$ wc &lt; document.txt       # document.txtの行数・単語数・文字数をカウント</p>
+</blockquote>
+<h3>エラーリダイレクト（2&gt;）</h3>
+<p>標準エラー出力をファイルにリダイレクトします。</p>
+<blockquote>
+<p>$ ls nonexistent 2&gt; error.log    # エラーをファイルに出力</p>
+<p>$ find / -name "*.txt" 2&gt; /dev/null    # エラーを破棄</p>
+</blockquote>
+<h3>標準出力とエラーをまとめてリダイレクト（&amp;&gt;）</h3>
+<p>標準出力と標準エラー出力を同じファイルにリダイレクトします。</p>
+<blockquote>
+<p>$ ls maybeexistent &amp;&gt; all_output.txt  # ファイルが存在しなくてもエラーも含めて出力</p>
+<p>⚠️ <strong>注意</strong>: <code>&gt;</code>でリダイレクトする際、ファイルが存在する場合は内容が完全に上書きされます。既存の内容を保持したい場合は<code>&gt;&gt;</code>を使用してください。</p>
+</blockquote>
+<h2>テキスト処理</h2>
+<p>Linuxには、テキストファイルの内容を表示、検索、操作するための多くのコマンドがあります。これらのコマンドを組み合わせることで、効率的にテキスト処理を行うことができます。</p>
+<h3>cat（concatenate）</h3>
+<p>ファイルの内容を画面に表示するコマンドです。複数のファイルを連結して表示することも可能です。</p>
+<blockquote>
+<p>$ cat file.txt            # ファイルの内容を表示</p>
+<p>$ cat file1.txt file2.txt # 複数ファイルを連結して表示</p>
+<p>💡 <strong>ヒント</strong>: 大きなファイルの場合、<code>cat</code>ですべての内容が一度に表示されてしまいます。長いファイルを表示する場合は<code>less</code>が適しています。</p>
+</blockquote>
+<h3>head</h3>
+<p>ファイルの先頭部分を表示するコマンドです。デフォルトでは先頭10行が表示されます。</p>
+<blockquote>
+<p>$ head file.txt           # 先頭10行を表示</p>
+<p>$ head -n 5 file.txt      # 先頭5行を表示</p>
+</blockquote>
+<h3>tail</h3>
+<p>ファイルの末尾部分を表示するコマンドです。デフォルトでは末尾10行が表示されます。ログファイルの監視などでよく使用されます。</p>
+<blockquote>
+<p>$ tail file.txt           # 末尾10行を表示</p>
+<p>$ tail -n 5 file.txt      # 末尾5行を表示</p>
+<p>$ tail -f log.txt         # ファイルの更新をリアルタイムで監視</p>
+</blockquote>
+<p><code>-f</code>オプション（follow）はファイルに新しい行が追加されるとリアルタイムで表示されます。ログファイルの監視に非常に便利です。</p>
+<blockquote>
+<p>💡 <strong>ヒント</strong>: <code>tail -f</code>を終了するには<code>Ctrl+C</code>を押します。このコマンドに限らず、ほとんどのコマンドは<code>Ctrl+C</code>で強制終了できます。</p>
+</blockquote>
+<h3>wc（word count）</h3>
+<p>ファイルの行数、単語数、文字数（バイト数）をカウントするコマンドです。</p>
+<blockquote>
+<p>$ wc file.txt             # 行数、単語数、文字数を表示</p>
+<p>$ wc -l file.txt          # 行数のみを表示</p>
+<p>$ wc -w file.txt          # 単語数のみを表示</p>
+<p>$ wc -c file.txt          # 文字数（バイト数）のみを表示</p>
+</blockquote>
+<h3>grep（global regular expression print）</h3>
+<p>ファイル内で指定したパターン（文字列や正規表現）にマッチする行を検索・表示するコマンドです。テキスト検索でよく使用されます。</p>
+<blockquote>
+<p>$ grep "検索文字列" file.txt    # 指定した文字列を含む行を表示</p>
+<p>$ grep -i "linux" file.txt     # 大文字小文字を区別しない検索</p>
+<p>$ grep -n "error" log.txt      # 行番号付きで表示</p>
+<p>$ grep -v "debug" log.txt      # 指定した文字列を含まない行を表示</p>
+<p>$ grep -l "function" *.js      # 現在のディレクトリのJSファイルでfunctionを検索</p>
+</blockquote>
+<p>また、指定したディレクトリ以下の複数ファイルを再帰的に検索する場合は<code>-r</code>オプションを使用します：</p>
+<blockquote>
+<p>$ grep -r "TODO" ./         # 現在のディレクトリ以下で指定した文字列「TODO」を検索</p>
+<p>🔍 <strong>詳細</strong>: grepは正規表現もサポートしており、より複雑なパターンマッチングが可能です。正規表現については、本カリキュラムでは扱いません。</p>
+</blockquote>
+<h3>sed（stream editor）</h3>
+<p>テキストの置換、削除、挿入などを行うストリームエディタです。ファイルを直接編集せずに、テキストの変換を行うことができます。</p>
+<p>基本的な置換操作：</p>
+<blockquote>
+<p>$ sed 's/古い文字列/新しい文字列/' file.txt    # 各行で最初にマッチした部分のみ置換</p>
+<p>$ sed 's/古い文字列/新しい文字列/g' file.txt   # 各行ですべてのマッチを置換</p>
+</blockquote>
+<p>特定の行を操作：</p>
+<blockquote>
+<p>$ sed '3d' file.txt         # 3行目を削除</p>
+<p>$ sed '2,5d' file.txt       # 2行目から5行目を削除</p>
+<p>$ sed -n '1,10p' file.txt   # 1行目から10行目のみを表示</p>
+<p>📝 <strong>メモ</strong>: これらの操作では直接ファイルを編集しているのではなく、標準出力に結果を表示しているだけの動作になります。</p>
+</blockquote>
+<p>ファイルを直接編集（インプレース編集）するには、<code>-i</code>オプションを使用します：</p>
+<blockquote>
+<p>$ sed -i 's/old/new/g' file.txt    # ファイルを直接変更</p>
+<p>⚠️ <strong>注意</strong>: <code>-i</code>オプションによるインプレース編集は元のファイルを直接変更します。重要なファイルの場合は事前にバックアップを作成することをお勧めします。</p>
+</blockquote>
+<h3>そのほかのテキスト処理コマンド</h3>
+<p>Linuxには他にも多くのテキスト処理コマンドがあります。ここでは代表的なものを紹介します。</p>
+<ul>
+<li><strong>less</strong>: 大きなテキストファイルをページ単位で表示するコマンドです。スクロールや検索が可能で、長いファイルの閲覧や文字列検索に便利です。</li>
+<li><strong>awk</strong>: テキストデータの処理や分析に特化したプログラミング言語・コマンドです。列（フィールド）ベースのデータ処理が得意で、CSVファイルやログファイルの処理によく使用されます。</li>
+<li><strong>cut</strong>: テキストファイルの特定の列やフィールドを抽出するコマンドです。区切り文字を指定して、必要な部分だけを取り出すことができます。</li>
+<li><strong>sort</strong>: テキストファイルの行を並び替えるコマンドです。アルファベット順や数値順、逆順など、様々な条件でソートが可能です。</li>
+<li><strong>uniq</strong>: 連続する重複行を削除するコマンドです。主に<code>sort</code>コマンドと組み合わせて使用されます。</li>
+</ul>
+<h2>パイプ（|）</h2>
+<p>コマンドの<strong>標準出力</strong>を別のコマンドの標準入力として渡す機能です。複数のコマンドを連結して、複雑なデータ処理を効率的に行うことができます。</p>
+<blockquote>
+<p>⚠️ <strong>重要</strong>: パイプで渡されるのは標準出力のみです。標準エラー出力はパイプでは渡されず、そのまま画面に表示されます。</p>
+</blockquote>
+<p>基本的な使用例：</p>
+<blockquote>
+<p>$ ls -l | grep ".txt"               # ファイル一覧からtxtファイルのみを抽出</p>
+<p>$ cat file.txt | wc -l              # ファイルの行数をカウント</p>
+<p>$ cat data.txt | sort | uniq | wc -l    # データファイルのユニークな行数をカウント</p>
+</blockquote>
+<p>リダイレクトとコマンドを連結して使用することも可能です：</p>
+<blockquote>
+<p>$ cat access.log | grep "ERROR" &gt; error_lines.txt    # ログファイルのエラー行数を別のファイルに保存</p>
+</blockquote>
+<h4>標準エラー出力とパイプ</h4>
+<p>存在しないファイルにアクセスしようとした場合は以下のようになります：</p>
+<blockquote>
+<p>$ cat nonexistent.txt | grep "pattern"</p>
+<p>cat: nonexistent.txt: No such file or directory</p>
+</blockquote>
+<p>この場合、エラーメッセージは画面に表示され、<code>grep</code>には何も渡されません。標準エラー出力もパイプで渡したい場合は、事前にリダイレクトして標準出力と統合する必要があります：</p>
+<blockquote>
+<p>$ cat nonexistent.txt 2&gt;&amp;1 | grep "No such file"    # エラーもパイプに渡す</p>
+</blockquote>
+<h2>おわりに</h2>
+<p>コマンドとパイプ、リダイレクトを組み合わせた使用は実際の業務で頻繁に使用されます。しっかりと習得しておきましょう。</p>

@@ -1,0 +1,216 @@
+<h1>第5回 アクセス権の管理</h1>
+<h2>ファイルの権限管理</h2>
+<p>Linuxでは、ファイルやディレクトリに対してアクセス権（パーミッション）を設定することで、誰がそのファイルを読み取り、書き込み、実行できるかを制御できます。これにより、システムのセキュリティを保ち、重要なファイルが意図しない変更や削除から保護されます。</p>
+<blockquote>
+<p>📝 <strong>メモ</strong>: アクセス権の管理は、マルチユーザーOSであるLinuxにおいて非常に重要な機能です。適切な権限設定により、システムの安全性と安定性を確保できます。</p>
+</blockquote>
+<h2>パーミッション</h2>
+<p>ファイルやディレクトリに設定されるアクセス権の種類です。Linuxでは各ファイルとディレクトリに対して、<strong>読み取り（read）</strong>、<strong>書き込み（write）</strong>、<strong>実行（execute）</strong>の3つの権限を設定できます。</p>
+<h3>3つの基本権限</h3>
+<h4>読み取り権限（read: r）</h4>
+<ul>
+<li><strong>ファイルの場合</strong>: ファイルの内容を表示・参照することができます</li>
+<li><strong>ディレクトリの場合</strong>: ディレクトリ内のファイル一覧を表示することができます</li>
+</ul>
+<h4>書き込み権限（write: w）</h4>
+<ul>
+<li><strong>ファイルの場合</strong>: ファイルの内容を変更・削除することができます</li>
+<li><strong>ディレクトリの場合</strong>: ディレクトリ内にファイルを作成・削除することができます</li>
+</ul>
+<h4>実行権限（execute: x）</h4>
+<ul>
+<li><strong>ファイルの場合</strong>: ファイルをプログラムとして実行することができます</li>
+<li><strong>ディレクトリの場合</strong>: ディレクトリ内に移動（<code>cd</code>コマンド）することができます</li>
+</ul>
+<blockquote>
+<p>🔍 <strong>詳細</strong>: ディレクトリの実行権限は「通過権限」とも呼ばれ、そのディレクトリを通ってさらに深い階層にアクセスするために必要です。つまり、実行権限がないとそのディレクトリを経由して中のファイルやディレクトリにアクセスできません。</p>
+</blockquote>
+<h3>パーミッションの表示</h3>
+<p><code>ls -l</code>コマンドでファイルの詳細情報を表示すると、最初の10文字でファイルの種類とパーミッションが表示されます。</p>
+<blockquote>
+<p>$ ls -l</p>
+<p>-rw-r--r-- 1 user group 1024 Nov 19 10:00 file.txt</p>
+<p>drwxr-xr-x 2 user group 4096 Nov 19 10:00 mydir</p>
+</blockquote>
+<p>表示の読み方：</p>
+<ul>
+<li><strong>1文字目</strong>: ファイル種別（<code>-</code>=通常ファイル、<code>d</code>=ディレクトリ、<code>l</code>=シンボリックリンクなど）</li>
+<li><strong>2-4文字目</strong>: 所有者（user）の権限（rwx）</li>
+<li><strong>5-7文字目</strong>: グループ（group）の権限（rwx）</li>
+<li><strong>8-10文字目</strong>: その他（other）の権限（rwx）</li>
+</ul>
+<p>例：<code>-rw-r--r--</code>の場合</p>
+<ul>
+<li><code>-</code>: 通常のファイル</li>
+<li><code>rw-</code>: 所有者は読み取り・書き込み可能、実行不可</li>
+<li><code>r--</code>: グループは読み取りのみ可能</li>
+<li><code>r--</code>: その他のユーザーは読み取りのみ可能</li>
+</ul>
+<h2>ユーザーとグループ</h2>
+<p>Linuxのパーミッションシステムでは、アクセス権限を3つの対象に分けて管理します。</p>
+<h3>所有者（User/Owner）</h3>
+<p>ファイルやディレクトリを作成したユーザー、またはそのファイルの所有権を持つユーザーです。通常、所有者にはファイルに対する全ての権限が与えられます。</p>
+<h3>グループ（Group）</h3>
+<p>複数のユーザーを一つのまとまりとして管理する仕組みです。同じプロジェクトで作業する複数のユーザーを同じグループに所属させることで、ファイルの共有と権限管理を効率的に行えます。</p>
+<h3>その他（Other）</h3>
+<p>所有者でもグループメンバーでもない、すべてのユーザーを指します。一般的には最も制限された権限が設定されます。</p>
+<blockquote>
+<p>💡 <strong>ヒント</strong>: 現在のユーザー名は<code>whoami</code>コマンド、所属グループは<code>groups</code>コマンドで確認できます。</p>
+<p>$ whoami</p>
+<p>$ groups</p>
+</blockquote>
+<h2>rootユーザー</h2>
+<p>Linuxシステムにおける、システム全体に対する完全な制御権限を持つ特別な管理者アカウントです。</p>
+<h3>rootユーザーの特徴</h3>
+<ul>
+<li><strong>UID（ユーザーID）が0</strong>: Linuxシステムでは、UID 0が管理者を表す特別な識別子です</li>
+<li><strong>パーミッション制限なし</strong>: ファイルの所有者や権限設定に関係なく、すべてのファイルやディレクトリにアクセス・変更可能</li>
+<li><strong>システム管理権限</strong>: サービスの起動・停止、システム設定の変更、ソフトウェアのインストール、ユーザー管理などが可能</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>警告</strong>: rootユーザーは非常に強力な権限を持つため、システムを破壊する可能性のあるコマンドも実行できます。rootユーザーで作業する際は、コマンドの内容を十分確認してから実行してください。</p>
+</blockquote>
+<h3>rootユーザーへの切り替え</h3>
+<p>通常のユーザーからrootユーザーに切り替える：</p>
+<blockquote>
+<p>$ su -                      # rootユーザーに完全に切り替え（rootのパスワードが必要）</p>
+<p>$ sudo su -                 # sudoを使ってrootに切り替え（自分のパスワードでOK）</p>
+</blockquote>
+<p>rootユーザーからログアウト：</p>
+<blockquote>
+<p># exit                      # rootからログアウトして元のユーザーに戻る</p>
+</blockquote>
+<h3>セキュリティ上の注意点</h3>
+<ul>
+<li><strong>直接ログイン禁止</strong>: 多くのシステムでは、セキュリティ向上のためrootユーザーでの直接ログインを禁止している</li>
+<li><strong>sudoの活用</strong>: 日常作業では<code>sudo</code>コマンドを使用して、必要な時のみ管理者権限を使用する（<code>sudo</code>コマンドは後述）</li>
+<li><strong>最小権限の原則</strong>: rootの権限が必要な作業以外は、通常のユーザーアカウントで作業を行う</li>
+</ul>
+<h2>chmod（change mode）</h2>
+<p>ファイルやディレクトリのパーミッション（アクセス権限）を変更するコマンドです。所有者またはroot権限を持つユーザーのみが実行できます。</p>
+<h3>数値表記での指定</h3>
+<p>パーミッションを3桁の8進数で指定する方法です。各桁はそれぞれ所有者、グループ、その他のユーザーの権限を表します。</p>
+<p>権限の数値：</p>
+<ul>
+<li><strong>4</strong>: 読み取り権限（r）</li>
+<li><strong>2</strong>: 書き込み権限（w）  </li>
+<li><strong>1</strong>: 実行権限（x）</li>
+</ul>
+<p>これらの数値を足し合わせて権限を表現します：</p>
+<ul>
+<li><strong>7</strong> (4+2+1): rwx（読み取り・書き込み・実行すべて可能）</li>
+<li><strong>6</strong> (4+2): rw-（読み取り・書き込み可能、実行不可）</li>
+<li><strong>5</strong> (4+1): r-x（読み取り・実行可能、書き込み不可）</li>
+<li><strong>4</strong>: r--（読み取りのみ可能）</li>
+<li><strong>0</strong>: ---（すべて不可）</li>
+</ul>
+<p>使用例：</p>
+<blockquote>
+<p>$ chmod 755 script.sh      # 所有者：rwx、グループ：r-x、その他：r-x</p>
+<p>$ chmod 644 document.txt   # 所有者：rw-、グループ：r--、その他：r--</p>
+<p>$ chmod 600 private.txt    # 所有者：rw-、グループ：---、その他：---</p>
+</blockquote>
+<h3>記号表記での指定</h3>
+<p>記号を使用してより直感的にパーミッションを変更する方法です。</p>
+<p>対象の指定：</p>
+<ul>
+<li><strong>u</strong>: user（所有者）</li>
+<li><strong>g</strong>: group（グループ）</li>
+<li><strong>o</strong>: other（その他）</li>
+<li><strong>a</strong>: all（すべて）</li>
+</ul>
+<p>操作の指定：</p>
+<ul>
+<li><strong>+</strong>: 権限を追加</li>
+<li><strong>-</strong>: 権限を削除</li>
+<li><strong>=</strong>: 権限を指定した内容に設定</li>
+</ul>
+<p>権限の指定：</p>
+<ul>
+<li><strong>r</strong>: 読み取り権限</li>
+<li><strong>w</strong>: 書き込み権限</li>
+<li><strong>x</strong>: 実行権限</li>
+</ul>
+<p>使用例：</p>
+<blockquote>
+<p>$ chmod u+x script.sh      # 所有者に実行権限を追加</p>
+<p>$ chmod g-w file.txt       # グループの書き込み権限を削除</p>
+<p>$ chmod o=r file.txt       # その他のユーザーの権限を読み取りのみに設定</p>
+<p>$ chmod a+r document.txt   # すべてのユーザーに読み取り権限を追加</p>
+</blockquote>
+<h3>ディレクトリの権限変更</h3>
+<p>ディレクトリとその中身すべてに再帰的に権限を適用したい場合は、<code>-R</code>オプションを使用します。</p>
+<blockquote>
+<p>$ chmod -R 755 myproject/  # ディレクトリとその中のすべてのファイル・ディレクトリに適用</p>
+<p>⚠️ <strong>注意</strong>: <code>-R</code>オプションは強力ですが、意図しないファイルの権限まで変更してしまう可能性があります。実行前に対象を十分確認してください。</p>
+</blockquote>
+<h2>chown（change owner）</h2>
+<p>ファイルやディレクトリの<strong>所有者</strong>や<strong>所有グループ</strong>を変更するコマンドです。通常はroot権限または<code>sudo</code>が必要です。</p>
+<h3>基本的な使用方法</h3>
+<p>所有者のみを変更：</p>
+<blockquote>
+<p>$ sudo chown newuser file.txt      # file.txtの所有者をnewuserに変更</p>
+</blockquote>
+<p>所有者とグループを同時に変更：</p>
+<blockquote>
+<p>$ sudo chown newuser:newgroup file.txt    # 所有者とグループをnewuserとnewgroupに同時に変更</p>
+<p>$ sudo chown newuser: file.txt            # 所有者を変更し、グループは所有者のプライマリグループに設定</p>
+<p>💡 <strong>ヒント</strong>: プライマリグループとは、ユーザーが所属する主要なグループのことです。通常、ユーザー作成時に自動的に作成され、そのユーザーに割り当てられます。</p>
+</blockquote>
+<h3>ディレクトリの所有権変更</h3>
+<p><code>-R</code>オプションを使用すると、ディレクトリとその中身すべてに再帰的に適用されます。</p>
+<blockquote>
+<p>$ sudo chown -R webuser:webgroup /var/www/html/    # ディレクトリとその中身すべての所有権を変更</p>
+<p>💡 <strong>ヒント</strong>: ファイルの現在の所有者とグループは<code>ls -l</code>コマンドで確認できます。</p>
+</blockquote>
+<h2>chgrp（change group）</h2>
+<p>ファイルやディレクトリの<strong>所有グループ</strong>のみを変更するコマンドです。<code>chown</code>のグループ変更に特化したコマンドです。</p>
+<h3>基本的な使用方法</h3>
+<blockquote>
+<p>$ sudo chgrp newgroup file.txt     # file.txtのグループをnewgroupに変更</p>
+<p>$ sudo chgrp -R developers project/   # projectディレクトリとその中身すべてのグループを変更</p>
+<p>📝 <strong>メモ</strong>: <code>chgrp</code>は<code>chown</code>のサブセット機能です。グループのみを変更したい場合は<code>chgrp</code>を、所有者も含めて変更したい場合は<code>chown</code>を使用するとよいでしょう。</p>
+</blockquote>
+<h2>su（substitute user）</h2>
+<p>ユーザーを切り替えるコマンドです。主にrootユーザーに切り替えるために使用されます。</p>
+<h3>基本的な使用方法</h3>
+<blockquote>
+<p>$ su -                      # rootユーザーに完全に切り替え（rootのパスワードが必要）</p>
+<p>$ su username               # 指定したユーザーに切り替え</p>
+<p>$ exit                     # 元のユーザーに戻る</p>
+</blockquote>
+<h2>sudo</h2>
+<p><strong>substitute user do</strong>の略称で、一時的に他のユーザー（通常はroot）の権限でコマンドを実行するためのコマンドです。システム管理作業や、管理者権限が必要な操作を安全に実行するために使用されます。</p>
+<h3>基本的な使用方法</h3>
+<blockquote>
+<p>$ sudo chmod 644 /etc/hosts  # root権限でシステムファイルの権限を変更</p>
+<p>$ sudo chown root:root /usr/local/bin/script.sh   # 管理者権限が必要な所有権変更</p>
+</blockquote>
+<h3>sudoの特徴</h3>
+<ul>
+<li><strong>一時的な権限昇格</strong>: 必要な時だけ管理者権限を使用</li>
+<li><strong>監査ログ</strong>: すべての<code>sudo</code>実行が記録されるため、セキュリティ面で安全</li>
+<li><strong>パスワード認証</strong>: 実行時にユーザーのパスワード入力が求められる（設定により異なる）</li>
+</ul>
+<h3>よく使用される sudo コマンド</h3>
+<p>パッケージ管理（Debian/Ubuntu系）：</p>
+<blockquote>
+<p>$ sudo apt update              # パッケージリストの更新</p>
+<p>$ sudo apt install package     # パッケージのインストール</p>
+</blockquote>
+<p>システム管理：</p>
+<blockquote>
+<p>$ sudo systemctl start service     # サービスの開始</p>
+<p>$ sudo systemctl restart service   # サービスの再起動</p>
+</blockquote>
+<p>ファイル編集：</p>
+<blockquote>
+<p>$ sudo vim /etc/config        # システム設定ファイルの編集</p>
+<p>⚠️ <strong>重要</strong>: <code>sudo</code>は実質的にrootユーザーと同等の強力な権限を与えるため、実行するコマンドの内容を十分理解してから使用してください。誤った操作はシステムに重大な影響を与える可能性があります。</p>
+<p>ℹ️ <strong>情報</strong>: <code>su</code>（substitute user）コマンドは完全に別のユーザーに切り替えるコマンドですが、<code>sudo</code>は一つのコマンドを別のユーザー権限で実行するコマンドです。一般的には、セキュリティの観点から<code>sudo</code>の使用が推奨されます。</p>
+</blockquote>
+<h2>おわりに</h2>
+<p>適切なアクセス権の管理は、Linuxシステムのセキュリティと安定性を保つために不可欠です。ファイルやディレクトリの権限を適切に設定し、安全なシステム運用を心がけましょう。</p>
+<blockquote>
+<p>💡 <strong>ヒント</strong>: セキュリティを重視する場合は、必要最小限の権限を与える原則（<strong>最小権限の原則</strong>）に従いましょう。</p>
+</blockquote>

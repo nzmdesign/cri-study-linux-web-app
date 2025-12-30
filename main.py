@@ -2,7 +2,6 @@ import json
 import os
 import glob
 from pathlib import Path
-import markdown
 import bcrypt
 import logging
 import hashlib
@@ -170,17 +169,16 @@ async def logout():
 @app.get("/guide", response_class=HTMLResponse)
 async def guide_page(request: Request):
 
-    file_path = f"content/guide/guide.md"
+    file_path = f"content/guide/guide.html"
 
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="ページが見つかりません")
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            markdown_content = f.read()
+            html_content = f.read()
 
-        # コンテンツの読み取りとタイトルを抽出
-        html_content = markdown.markdown(markdown_content)
+        # タイトルを設定
         title = f"受講案内"
 
         return templates.TemplateResponse("content.html", {
@@ -201,18 +199,16 @@ async def text_page(
     if not current_user:
         return RedirectResponse(url='/login', status_code=302)
 
-    file_path = f"content/text/{text_id}.md"
+    file_path = f"content/text/{text_id}.html"
 
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="テキストが見つかりません")
 
     try:
-        # MarkdownをHTMLに変換
         with open(file_path, "r", encoding="utf-8") as f:
-            markdown_content = f.read()
+            html_content = f.read()
 
-        # コンテンツの読み取りとタイトルを抽出
-        html_content = markdown.markdown(markdown_content)
+        # タイトルを設定
         title = f"第{text_id}回テキスト"
 
         return templates.TemplateResponse("content.html", {
@@ -236,17 +232,16 @@ async def setup_page(
     if setup_type not in ["windows", "mac"]:
         raise HTTPException(status_code=404, detail="ページが見つかりません")
 
-    file_path = f"content/setup/{setup_type}.md"
+    file_path = f"content/setup/{setup_type}.html"
 
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="ガイドが見つかりません")
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            markdown_content = f.read()
+            html_content = f.read()
 
-        # コンテンツの読み取りとタイトルを抽出
-        html_content = markdown.markdown(markdown_content)
+        # タイトルを設定
         title = f"{setup_type.capitalize()}向け環境構築ガイド"
 
         return templates.TemplateResponse("content.html", {
