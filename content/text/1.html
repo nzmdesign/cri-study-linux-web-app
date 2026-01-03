@@ -1,22 +1,61 @@
 <h1>第1回 Linuxの基礎知識</h1>
 <h2>Linuxとは</h2>
-<p>コンピュータを動かすための<strong>OS（オペレーティングシステム）</strong>の一つです。OSの種類は他にも、コンピュータ向けにはWindowsやmacOS、スマートフォン向けにはiOSやAndroidなどがあります。Linuxは特にサーバーや組み込みシステムで広く使われています。</p>
-<blockquote>
-<p>📝 <strong>メモ</strong>: Linuxはオープンソースであり、誰でも自由に利用、改良、配布することができます（つまり、<strong>無料</strong>で使えます）。</p>
-</blockquote>
+<p>コンピュータを動かすための<strong>OS（オペレーティングシステム）</strong>の一つです。OSの種類は他にも、コンピュータ向けにはWindowsやmacOS、スマートフォン向けにはiOSやAndroidなどがあります。Linuxは特にサーバーや組み込みシステムで広く使われています。Linuxはオープンソースであり、誰でも自由に利用・改良・配布できます。
+</p>
 <h3>Linuxはマルチユーザー・マルチタスクOS</h3>
 <p>Linuxは<strong>マルチユーザー</strong>と<strong>マルチタスク</strong>をサポートしています。</p>
 <ul>
-<li><strong>マルチユーザー</strong>: 複数のユーザーが同時にシステムを利用できることを意味します。各ユーザーは独自の設定やファイルを持ち、他のユーザーと区別されます。</li>
-<li><strong>マルチタスク</strong>: 複数のプログラムやプロセスが同時に実行されることを意味します。これにより、ユーザーは複数の作業を同時に行うことができます。</li>
+    <li><strong>マルチユーザー</strong>: 複数のユーザーが同時にシステムを利用できることを意味します。各ユーザーは独自の設定やファイルを持ち、他のユーザーと区別されます。</li>
+    <li><strong>マルチタスク</strong>: 複数のプログラムやプロセスが同時に実行されることを意味します。これにより、ユーザーは複数の作業を同時に行うことができます。</li>
 </ul>
+<h3>Linuxディストリビューション</h3>
+<p>Linuxカーネルにツール群やパッケージ管理を組み合わせて配布される「まとまり」のことです。用途に応じて選択でき、同じLinuxでも使い勝手や標準ツールが異なります。主な系統としては次のものがあります。</p>
+<ul>
+    <li><strong>Debian系</strong>: Ubuntuが有名。利用者が多く情報が探しやすい。パッケージ管理は<code>apt</code></li>
+    <li><strong>Red Hat系</strong>:
+        商用版のRHELと、その先行開発版で無償のCentOSが有名。RHELは企業向けサポートあり。パッケージ管理は<code>dnf</code>や<code>yum</code></li>
+</ul>
+<div class="note-box tip">
+    <p>開発用途ではUbuntu、サーバー運用ではRHEL系やUbuntuが選ばれることが多いです。</p>
+</div>
+<h3>Linuxカーネル</h3>
+<p>Linuxの中核（コア）となる部分であり、CPU、メモリ、ディスクなどのハードウェアとソフトウェアの橋渡しの役割を担います。プログラミング言語で書かれたアプリケーションは、カーネルが提供する<strong>システムコール</strong>というAPIを通じて、ファイルの読み書き・プロセスの実行・ネットワーク通信などの機能にアクセスします。
+</p>
+<div class="note-box note">
+    <p>一般に「Linuxを使う」という場合は、LinuxカーネルではなくLinuxディストリビューションを意味することが多いです。</p>
+</div>
+<h3>ソフトウェアライセンス</h3>
+<p>Linuxはオープンソースで、ライセンスに基づいて利用・改変・配布できます。ライセンスは再配布時の義務や条件を定めており、遵守が必要です。大きく<strong>コピーレフト</strong>（改変物の公開義務）と<strong>パーミッシブ</strong>（緩やかな条件）に分けられます。
+</p>
+<ul>
+    <li><strong>GPL（GNU General Public License）</strong>:
+        コピーレフト。派生物の公開時に同ライセンスでソース公開が必要。Linuxカーネルは<strong>GPLv2</strong>です。</li>
+    <li><strong>Apache License 2.0</strong>: パーミッシブ。特許ライセンスの付与が明確で、商用利用や再ライセンスが容易。</li>
+    <li><strong>MIT/BSD</strong>: パーミッシブ。最小限の著作権表示で広く再利用可能。</li>
+</ul>
+<div class="note-box info">
+    <p>実務のプロジェクトでは、プログラミング言語やミドルウェアなど、使用するソフトウェアのライセンス調査が必要になることが多いです。</p>
+</div>
 <h2>Linuxを学ぶ理由</h2>
-<p>多くの新規開発プロジェクトでLinuxが採用されているためです。サーバー用として使われるOSは主にWindows ServerとLinuxに分かれますが、クラウドサービスのシェア拡大に伴い、クラウドサービスと親和性の高いLinuxのシェアが高くなっています。AWSの調査によると、<strong>新規アプリケーションの約80%がLinuxベースの技術（コンテナ、サーバレス）で構築</strong>されています。そのため、ソフトウェア開発や運用においてLinuxの知識は不可欠となっています。</p>
-<blockquote>
-<p>🔍 <strong>詳細</strong>: 業務で支給されるPCはWindowsマシンであることが多いですが、実際の開発はLinuxのサーバーに繋いで行うことが多いです。</p>
-<p>📊 <strong>参考資料</strong>: <a href="https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_Why-Container-Now_0630_v1.pdf">AWS Black Belt - なぜ今コンテナなのか AWSのコンテナサービス全体の理解</a></p>
-</blockquote>
+<p>多くの新規開発プロジェクトでLinuxが採用されているためです。サーバー用OSは主にWindows
+    ServerとLinuxに分かれますが、クラウドの普及に伴い、クラウドと親和性の高いLinuxのシェアが伸びています。AWSの調査によると、<strong>新規アプリケーションの約80%がLinuxベースの技術（コンテナ、サーバレス）で構築</strong>されています。そのため、ソフトウェア開発や運用においてLinuxの知識は不可欠です。
+</p>
+<div class="note-box note">
+    <p><strong>参考資料：</strong><a
+            href="https://pages.awscloud.com/rs/112-TZM-766/images/AWS-Black-Belt_2024_Why-Container-Now_0630_v1.pdf">AWS
+            Black Belt - なぜ今コンテナなのか AWSのコンテナサービス全体の理解</a></p>
+</div>
 <h2>Linuxを学ぶべき人</h2>
-<p><strong>ソフトウェア開発や運用に携わる全ての人</strong>です。最低限のターミナル操作ができることが求められます。インフラエンジニアやバックエンドエンジニアはもちろん、フロントエンドエンジニアであっても、役割間の連携をスムーズにするためにLinuxの基礎知識が役に立ちます。</p>
+<p><strong>ソフトウェア開発や運用に携わる全ての人</strong>です。最低限のターミナル操作ができるとスムーズです。</p>
+<h3>業務でのLinuxの役割</h3>
+<p>Linuxはアプリケーションを構築するサーバーとしての役割だけでなく、開発環境としても使われます。業務で支給されるPCはWindowsマシンであることが多いですが、<strong>実際の開発はVS
+        CodeなどのエディタからログインしたLinuxサーバー上で行う</strong>ことがあります。
+</p>
+<h3>Webアプリを作りたい方へ</h3>
+<p><strong>サーバーの選択肢としてLinuxが有力になることが多い</strong>でしょう。簡単なWebプログラミング、SQLでのデータベース操作、Linuxサーバーと少しのクラウドの知識があれば、自分で作成したWebアプリを全世界に公開することも比較的容易です。
+</p>
+<div class="note-box tip">
+    <p>このWebサイトもLinuxサーバー上で動作しています。</p>
+</div>
 <h2>おわりに</h2>
 <p>Linuxは現代のソフトウェア開発において重要な存在です。Linuxの基礎知識を身につけて、開発や運用の効率を向上させましょう。</p>

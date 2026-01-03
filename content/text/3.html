@@ -1,157 +1,268 @@
 <h1>第3回 ファイル操作</h1>
 <h2>ファイル</h2>
-<p>Linuxにおける情報やデータの格納単位です。ファイルには、テキスト、画像、音声、プログラムなど、様々な種類の情報を保存することができます。通常のデータファイルだけでなく、このあと説明するディレクトリも特殊なファイルとして管理されます。</p>
-<blockquote>
-<p>📝 <strong>メモ</strong>: ファイルの概念はWindowsやmacOSの「ファイル」とあまり変わらないと考えてよいでしょう。</p>
-</blockquote>
+<p>Linuxにおける情報やデータの格納単位です。ファイルには、テキスト、画像、音声、プログラムなど、さまざまな種類の情報を保存できます。通常のデータファイルだけでなく、後ほど説明するディレクトリも特殊なファイルとして管理されます。
+</p>
+<div class="note-box note">
+    <p>ファイルの概念はWindowsやmacOSの「ファイル」とあまり変わらないと考えてよいでしょう。</p>
+</div>
 <h2>ディレクトリ</h2>
-<p>ファイルを整理・分類するための容器のような存在です。WindowsやmacOSでは「フォルダー」と呼ばれることが多いですが、Linuxでは一般的に「ディレクトリ」と呼びます。ディレクトリの中にはファイルや他のディレクトリを格納でき、これにより階層構造を作ることができます。</p>
-<blockquote>
-<p>🔍 <strong>詳細</strong>: ディレクトリも実際にはファイルの一種として扱われますが、その中身は格納されているファイルやディレクトリの情報（名前やメタデータ）になります。</p>
-</blockquote>
+<p>ファイルを整理・分類するための容器のような存在です。WindowsやmacOSでは「フォルダ」と呼ばれることが多いですが、Linuxでは一般的に「ディレクトリ」と呼びます。ディレクトリの中にはファイルや他のディレクトリを格納でき、これにより階層構造を作ることができます。
+</p>
+<div class="note-box info">
+    <p>ディレクトリも実際にはファイルの一種として扱われますが、その中身は格納されているファイルやディレクトリの情報（名前やメタデータ）になります。</p>
+</div>
 <h3>カレントディレクトリ</h3>
-<p>現在操作対象となっているディレクトリのことを指します。ターミナルでコマンドを実行する際、特にパスを指定しない場合は、このカレントディレクトリが基準となります。カレントディレクトリは、<code>pwd</code>コマンドで確認できます。</p>
+<p>現在操作対象となっているディレクトリのことを指します。ターミナルでコマンドを実行する際、特にパスを指定しない場合は、このカレントディレクトリが基準となります。カレントディレクトリは、<code>pwd</code>コマンドで確認できます。
+</p>
 <h2>パス</h2>
-<p>ファイルやディレクトリの場所を示す住所のようなものです。Linuxファイルシステムは、ルート（/）から始まる木構造になっており、この構造の中でファイルやディレクトリの位置を表現します。パスを使って、コマンドに対して「どのファイルを操作したいか」を明確に指示できます。</p>
-<blockquote>
-<p>/home/xnter/workspace/file.txt</p>
-</blockquote>
-<p>上記の例では、<code>/</code>から始まって、<code>home</code> → <code>xnter</code> → <code>workspace</code> → <code>file.txt</code>という階層を辿ることで、<code>file.txt</code>ファイルの場所を特定しています。</p>
+<p>ファイルやディレクトリの場所を示す住所のようなものです。Linuxファイルシステムは、ルート（/）から始まる木構造になっており、この構造の中でファイルやディレクトリの位置を表現します。パスを使って、コマンドに対して「どのファイルを操作したいか」を明確に指示できます。
+</p>
+<div class="terminal">
+    <p>/home/xnter/cri-study-linux-workspace/file1.txt</p>
+</div>
+<p>上記の例では、<code>/</code>から始まって、<code>home</code> → <code>xnter</code> → <code>cri-study-linux-workspace</code> →
+    <code>file1.txt</code>という階層を辿ることで、<code>file1.txt</code>ファイルの場所を特定しています。
+</p>
+<div class="note-box note">
+    <p><code>xnter</code>はログインしているユーザー名なので、自分のユーザー名で読み替えてください。</p>
+</div>
 <h3>絶対パスと相対パス</h3>
 <p>パスには<strong>絶対パス</strong>と<strong>相対パス</strong>の2つの表現方法があります。</p>
 <p><strong>絶対パス</strong>は、ルートディレクトリ（/）から始まるファイルやディレクトリの完全な場所を表します。どこからでも同じファイルを確実に指定できます。</p>
-<blockquote>
-<p>/home/xnter/workspace/file.txt</p>
-</blockquote>
+<div class="terminal">
+    <p>/home/xnter/cri-study-linux-workspace/file1.txt</p>
+</div>
 <p><strong>相対パス</strong>は、現在の作業ディレクトリ（カレントディレクトリ）を基準とした場所を表します。現在いる場所によって指し示すファイルが変わります。</p>
-<blockquote>
-<p>./workspace/file.txt  （現在のディレクトリにあるworkspaceディレクトリ内のfile.txt）</p>
-<p>../xnter/report.txt  （一つ上の階層のxnterディレクトリ内のreport.txt）</p>
-</blockquote>
+<p>現在のディレクトリにある<code>cri-study-linux-workspace</code>ディレクトリ内の<code>file1.txt</code>：</p>
+<div class="terminal">
+    <p>./cri-study-linux-workspace/file1.txt</p>
+</div>
 <p>特殊なパス表現：</p>
 <ul>
-<li><code>.</code>：現在のディレクトリ</li>
-<li><code>..</code>：一つ上の階層のディレクトリ</li>
-<li><code>~</code>：ホームディレクトリ（ログインユーザーの個人ディレクトリ）</li>
+    <li><code>.</code>：現在のディレクトリ</li>
+    <li><code>..</code>：一つ上の階層のディレクトリ</li>
+    <li><code>~</code>：ホームディレクトリ（ログインユーザーの個人ディレクトリ）</li>
 </ul>
-<blockquote>
-<p>💡 <strong>ヒント</strong>: 絶対パスは確実ですが長くなりがちです。相対パスは短く書けますが、現在の場所に依存するため注意が必要です。状況に応じて使い分けましょう。</p>
-</blockquote>
+<div class="note-box tip">
+    <p>絶対パスは確実ですが長くなりがちです。相対パスは短く書けますが、現在の場所に依存するため注意が必要です。状況に応じて使い分けましょう。</p>
+</div>
 <h2>ファイル操作</h2>
 <p>Linuxでは、コマンドラインからファイルやディレクトリの作成、移動、削除などの操作を行います。ここでは、基本的なファイル操作コマンドを実例とともに紹介します。</p>
 <h3>cd（change directory）</h3>
 <p>ディレクトリを移動するためのコマンドです。作業する場所を変更する際に使用します。</p>
-<blockquote>
-<p>$ cd /home/xnter/workspace  # 絶対パスで指定</p>
-<p>$ cd workspace              # 相対パスで指定</p>
-<p>$ cd ..                     # 一つ上の階層に移動</p>
-<p>$ cd ~                      # ホームディレクトリに移動</p>
-<p>$ cd                        # 引数なしでもホームディレクトリに移動</p>
-<p>$ cd -                      # 一つ前にいたディレクトリに戻る</p>
-</blockquote>
-<p>念押しでの記載になりますが、現在いる場所は<code>pwd</code>コマンドで確認できます。</p>
-<blockquote>
-<p>$ pwd</p>
-<p>📝 <strong>メモ</strong>: <code>cd</code>コマンドは引数を省略すると、自動的にホームディレクトリに移動します。</p>
-</blockquote>
+<p>ホームディレクトリに移動：</p>
+<div class="terminal">
+    <p>$ cd ~</p>
+</div>
+<p>絶対パスで指定：</p>
+<div class="terminal">
+    <p>$ cd /home/xnter/cri-study-linux-workspace</p>
+</div>
+<p>相対パスで指定（現在がホームディレクトリでない場合は失敗します）：</p>
+<div class="terminal">
+    <p>$ cd cri-study-linux-workspace</p>
+</div>
+<p>一つ上の階層に移動：</p>
+<div class="terminal">
+    <p>$ cd ..</p>
+</div>
+<p>一つ前にいたディレクトリに戻る：</p>
+<div class="terminal">
+    <p>$ cd -</p>
+</div>
+<p>念のため、現在いる場所は<code>pwd</code>コマンドで確認できます。</p>
+<div class="terminal">
+    <p>$ pwd</p>
+</div>
+<div class="note-box note">
+    <p><code>cd</code>コマンドは引数を省略すると、自動的にホームディレクトリに移動します。</p>
+</div>
 <h3>ls（list）</h3>
 <p>ディレクトリ内のファイルやディレクトリの一覧を表示するコマンドです。</p>
-<blockquote>
-<p>$ ls                       # 現在のディレクトリの内容を表示</p>
-<p>$ ls /home/xnter           # 指定したディレクトリの内容を表示</p>
-<p>$ ls -l                    # 詳細情報付きで表示</p>
-<p>$ ls -a                    # 隠しファイルも含めて表示</p>
-<p>$ ls -la                   # 詳細情報と隠しファイル両方を表示</p>
-</blockquote>
-<p><code>ls -l</code>の出力では、ファイルの権限、所有者、サイズ、更新日時などの情報が表示されます。</p>
-<blockquote>
-<p>💡 <strong>ヒント</strong>: ファイルの権限、所有者については次回以降で説明します。</p>
-</blockquote>
+<p>現在のディレクトリの内容を表示：</p>
+<div class="terminal">
+    <p>$ ls</p>
+</div>
+<p>指定したディレクトリの内容を表示：</p>
+<div class="terminal">
+    <p>$ ls cri-study-linux-workspace</p>
+</div>
+<p>指定したディレクトリの内容を詳細情報付きで表示：</p>
+<div class="terminal">
+    <p>$ ls -l cri-study-linux-workspace</p>
+</div>
+<p>指定した<strong>ディレクトリの</strong>詳細情報付きで表示：</p>
+<div class="terminal">
+    <p>$ ls -ld cri-study-linux-workspace</p>
+</div>
+<p>現在のディレクトリを隠しファイルも含めて表示：</p>
+<div class="terminal">
+    <p>$ ls -a</p>
+</div>
+<p>現在のディレクトリの詳細情報と隠しファイルの両方を表示：</p>
+<div class="terminal">
+    <p>$ ls -la</p>
+</div>
+<div class="note-box note">
+    <p><code>ls -l</code>の出力では、ファイルの権限、所有者、サイズ、更新日時などの情報が表示されます。ファイルの権限、所有者については次回以降で説明します。</p>
+</div>
 <h4>ファイルとディレクトリの見分け方</h4>
-<p><code>ls -l</code>コマンドの出力では、最初の文字でファイルかディレクトリかを判別できます。<br />
-- <code>-</code>で始まる行はファイルを示します。<br />
-- <code>d</code>で始まる行はディレクトリを示します。</p>
+<p><code>ls -l</code>コマンドの出力では、最初の文字でファイルかディレクトリかを判別できます。</p>
+<ul>
+    <li><code>-</code>で始まる行はファイルを示します。</li>
+    <li><code>d</code>で始まる行はディレクトリを示します。</li>
+</ul>
 <p>例：</p>
-<blockquote>
-<p>$ ls -l</p>
-<p>drwxr-xr-x  2 user user 4096 Jun  1 12:00 mydir</p>
-<p>-rw-r--r--  1 user user  123 Jun  1 12:00 myfile.txt</p>
-</blockquote>
-<p>上記の例では、<code>mydir</code>がディレクトリ、<code>myfile.txt</code>がファイルです。</p>
+<div class="terminal">
+    <p>$ ls -l cri-study-linux-workspace/</p>
+    <p>total 4</p>
+    <p>drwxr-xr-x 2 xnter xnter 4096 Jan 2 12:38 dir1</p>
+    <p>-rw-r--r-- 1 xnter xnter 0 Jan 2 11:59 file1.txt</p>
+    <p>-rw-r--r-- 1 xnter xnter 0 Jan 2 11:59 file2.txt</p>
+</div>
+<p>上記の例では、<code>dir1</code>がディレクトリ、<code>file1.txt</code>と<code>file2.txt</code>がファイルです。</p>
 <h3>touch</h3>
-<p>新しい空のファイルを作成するか、既存ファイルのタイムスタンプを更新するコマンドです。</p>
-<blockquote>
-<p>$ touch newfile.txt         # 新しいファイルを作成</p>
-<p>$ touch file1.txt file2.txt # 複数のファイルを一度に作成</p>
-</blockquote>
-<p>ファイルが既に存在する場合は、新しいファイルは作成されず、既存ファイルの最終更新時刻が現在時刻に更新されます。</p>
-<blockquote>
-<p>ℹ️ <strong>情報</strong>: タイムスタンプはファイルの最終アクセス時間や最終変更時間などの情報です。</p>
-</blockquote>
+<p>新しい空のファイルを作成するか、既存ファイルのタイムスタンプを更新するコマンドです。今回は<code>cri-study-linux-workspace</code>ディレクトリに移動してコマンドを実行します。</p>
+<div class="terminal">
+    <p>$ cd ~/cri-study-linux-workspace</p>
+</div>
+<p>新しいファイルを作成：</p>
+<div class="terminal">
+    <p>$ touch src.txt</p>
+</div>
+<p>複数のファイルを一度に作成：</p>
+<div class="terminal">
+    <p>$ touch file1.txt file2.txt</p>
+</div>
+<p><code>file1.txt</code>と<code>file2.txt</code>はすでに存在するので、新しいファイルは作成されず、既存ファイルの最終更新時刻が現在時刻に更新されます。</p>
+<div class="note-box info">
+    <p>タイムスタンプはファイルの最終アクセス時間や最終変更時間などの情報です。</p>
+</div>
+<div class="note-box note">
+    <p>ファイル操作を行う際は、コマンド実行後に意図した操作が行われたかを<code>ls -l</code>コマンドで確認する癖をつけましょう。</p>
+</div>
 <h3>mkdir（make directory）</h3>
 <p>新しいディレクトリを作成するコマンドです。</p>
-<blockquote>
-<p>$ mkdir newdir              # 新しいディレクトリを作成</p>
-<p>$ mkdir dir1 dir2 dir3      # 複数のディレクトリを一度に作成</p>
-<p>$ mkdir -p parent/child     # 親ディレクトリも含めて作成</p>
-</blockquote>
+<p>新しいディレクトリを作成：</p>
+<div class="terminal">
+    <p>$ mkdir newdir</p>
+</div>
+<p>複数のディレクトリを一度に作成：</p>
+<div class="terminal">
+    <p>$ mkdir dir1 dir2 dir3</p>
+</div>
+<p><code>dir1</code>ディレクトリは、すでに存在するのでエラーになりますが、他のディレクトリは新たに作成されます。</p>
+<p>階層構造を一度に作成：</p>
+<div class="terminal">
+    <p>$ mkdir -p parent/child</p>
+</div>
 <p><code>-p</code>オプションを使うと、指定したパスの途中に存在しないディレクトリがある場合でも、必要な親ディレクトリを自動的に作成してくれます。</p>
 <h3>cp（copy）</h3>
 <p>ファイルやディレクトリをコピーするコマンドです。</p>
-<blockquote>
-<p>$ cp source.txt destination.txt    # ファイルをコピー（すでにdestination.txtが存在する場合は上書き）</p>
-<p>$ cp source.txt /home/xnter/       # 他のディレクトリにコピー</p>
-<p>$ cp -r sourcedir destdir          # ディレクトリを再帰的にコピー（すでにdestdirが存在する場合はその中にコピー）</p>
-</blockquote>
-<p><code>-r</code>オプションはディレクトリをコピーする際に必要です。このオプションにより、ディレクトリ内のすべてのファイルとサブディレクトリも含めてコピーされます。</p>
-<blockquote>
-<p>⚠️ <strong>注意</strong>: すでに存在するファイルをコピー先に指定すると、そのファイルは上書きされます。重要なファイルを上書きしないように注意してください。</p>
-</blockquote>
+<p>ファイルをコピー（src.txtをもとに、dst.txtを作成）：</p>
+<div class="terminal">
+    <p>$ cp src.txt dst.txt</p>
+</div>
+<p>もし、すでに<code>dst.txt</code>が存在していた場合は上書きされます。</p>
+<p>他のディレクトリにコピー：</p>
+<div class="terminal">
+    <p>$ cp src.txt parent/child</p>
+</div>
+<p>この場合、<code>parent/child/src.txt</code>としてコピーされます。もし、コピー先のファイル名を指定したい場合は、コピー先のパスにファイル名を含めて指定します。</p>
+<div class="terminal">
+    <p>$ cp src.txt parent/child/dst.txt</p>
+</div>
+<p>ディレクトリを再帰的にコピー：</p>
+<div class="terminal">
+    <p>$ cp -r parent newparent</p>
+</div>
+<p><code>-r</code>オプションはディレクトリをコピーする際に必要です。このオプションにより、ディレクトリ内のすべてのファイルとサブディレクトリも含めてコピーされます。もし、すでに<code>newparent</code>ディレクトリが存在していた場合は、その中に<code>parent</code>ディレクトリが丸ごとコピーされます。
+</p>
+<div class="note-box warning">
+    <p>すでに存在するファイルをコピー先に指定すると、そのファイルは上書きされます。重要なファイルを上書きしないように注意してください。</p>
+</div>
 <h3>mv（move）</h3>
 <p>ファイルやディレクトリを移動、または名前を変更するコマンドです。</p>
-<blockquote>
-<p>$ mv oldname.txt newname.txt       # ファイル名を変更</p>
-<p>$ mv file.txt /home/xnter/workspace/  # ファイルをディレクトリに移動</p>
-<p>$ mv olddir newdir                 # ディレクトリ名を変更</p>
-</blockquote>
-<p><code>mv</code>コマンドは元のファイルが削除されて新しい場所に移動します。コピーではなく移動なので注意してください。</p>
+<p>ファイル名を変更：</p>
+<div class="terminal">
+    <p>$ mv src.txt newsrc.txt</p>
+</div>
+<p>ファイルをディレクトリに移動：</p>
+<div class="terminal">
+    <p>$ mv newsrc.txt parent/child</p>
+</div>
+<p>これにより、<code>parent/child/newsrc.txt</code>として移動されます。</p>
+<p>ディレクトリ名を変更：</p>
+<div class="terminal">
+    <p>$ mv parent oldparent</p>
+</div>
+<div class="note-box warning">
+    <p><code>mv</code>コマンドは元のファイルが削除されて新しい場所に移動します。コピーではなく移動なので注意してください。</p>
+</div>
 <h3>rm（remove）</h3>
 <p>ファイルやディレクトリを削除するコマンドです。削除したファイルは復旧が困難なので、使用時は十分注意してください。</p>
-<blockquote>
-<p>$ rm file.txt               # ファイルを削除</p>
-<p>$ rm file1.txt file2.txt    # 複数のファイルを削除</p>
-<p>$ rm -r directory           # ディレクトリを再帰的に削除</p>
-<p>$ rm -i file.txt            # 削除前に確認を求める</p>
-</blockquote>
-<p><code>-r</code>オプションでディレクトリ内のすべてのファイルとサブディレクトリが削除されます。<code>-i</code>オプションを使うと、削除前に確認メッセージが表示されるため、誤操作を防げます。</p>
-<blockquote>
-<p>⚠️ <strong>警告</strong>: LinuxにはWindowsのようにゴミ箱の概念がないため、<code>rm</code>コマンドで削除したファイルは即座に削除されます。重要なファイルを削除する前は必ず確認してください。</p>
-</blockquote>
-<h4>打ってはいけないコマンド</h4>
-<p><code>sudo rm -rf /</code>は絶対に実行しないでください。これは管理者権限でシステム全体を強制的に削除するコマンドであり、実行するとシステムが完全に破壊され、事前にバックアップを行っていなければ復旧困難になります。最悪の場合、損害賠償請求になる可能性もあります。</p>
+<p>ファイルを削除：</p>
+<div class="terminal">
+    <p>$ rm dst.txt</p>
+</div>
+<p>複数のファイルを削除：</p>
+<div class="terminal">
+    <p>$ rm file1.txt file2.txt</p>
+</div>
+<p>ディレクトリを再帰的に削除：</p>
+<div class="terminal">
+    <p>$ rm -r oldparent</p>
+</div>
+<p><code>-r</code>オプションでディレクトリ内のすべてのファイルとサブディレクトリが削除されます。</p>
+<div class="note-box warning">
+    <p><code>rm</code>コマンドはゴミ箱を介さず即座に削除します。重要なファイルを削除する前は必ず確認してください。</p>
+</div>
+<div class="note-box error">
+    <p><strong>打ってはいけないコマンド：</strong><code>sudo rm -rf /</code>は絶対に実行しないでください。これは管理者権限でシステム全体を強制的に削除するコマンドであり、実行するとシステムが完全に破壊され、事前にバックアップを行っていなければ復旧は困難です。
+    </p>
+</div>
 <h3>find</h3>
-<p>ファイルやディレクトリを検索するコマンドです。指定した条件に合致するファイルを見つけることができます。</p>
-<blockquote>
-<p>$ find . -name "*.txt"              # 現在のディレクトリ以下でtxtファイルを検索</p>
-<p>$ find /home -name "report.txt"     # /home以下でreport.txtを検索（「以下」には再起的にすべてのサブディレクトリも含む）</p>
-<p>$ find . -type d -name "config"     # configという名前のディレクトリを検索</p>
-<p>$ find . -size +10M                 # 10MB以上のファイルを検索</p>
-</blockquote>
-<p><code>find</code>コマンドは非常に強力で、ファイル名、ファイルタイプ、サイズ、更新日時など、様々な条件で検索できます。</p>
+<p>ファイルやディレクトリを検索するコマンドです。指定した条件に合致するファイルを見つけることができます。非常に有用で、ファイル名、ファイルタイプ、ファイルサイズ、更新日時など、さまざまな条件で検索できます。押さえておきたいコマンドの一つです。
+</p>
+<p>拡張子が<code>.txt</code>のファイルを検索：</p>
+<div class="terminal">
+    <p>$ find . -name "*.txt"</p>
+</div>
+<div class="note-box info">
+    <p>Linuxでは必ずしも<code>.txt</code>のような拡張子が必要であるとは限りません。Windowsとは異なり、ファイルの種類は拡張子ではなく、ファイル内容や属性によって判断されることが多いです。</p>
+</div>
+<p>すでに説明した通り、<code>.</code>は現在のディレクトリを示します。つまり、現在のディレクトリ以下でファイルを探索します。</p>
+<p>「dir」+（1文字）のディレクトリを検索：</p>
+<div class="terminal">
+    <p>$ find . -type d -name "dir?"</p>
+</div>
+<p><code>-type</code>オプションは検索対象のファイルタイプを指定します。<code>d</code>はディレクトリを意味します。ファイルを検索したいときは<code>f</code>を指定します。</p>
 <h4>ワイルドカード</h4>
 <p>ファイル名の一部を省略して、パターンマッチングを行う特殊文字です。複数のファイルを一度に指定する際に便利です。</p>
 <ul>
-<li><strong><code>*</code></strong>: 0文字以上の任意の文字列にマッチします</li>
-<li><strong><code>?</code></strong>: 1文字の任意の文字にマッチします</li>
-<li><strong><code>[]</code></strong>: 括弧内の文字のいずれか1文字にマッチします</li>
+    <li><strong><code>*</code></strong>: 0文字以上の任意の文字列にマッチします。</li>
+    <li><strong><code>?</code></strong>: 1文字の任意の文字にマッチします。</li>
+    <li><strong><code>[]</code></strong>: 括弧内の文字のいずれか1文字にマッチします。</li>
 </ul>
 <p>使用例：</p>
-<blockquote>
-<p>$ ls *.txt                  # .txtで終わるすべてのファイル</p>
-<p>$ ls file?.txt              # file1.txt, fileA.txtなどにマッチ</p>
-<p>$ ls file[123].txt          # file1.txt, file2.txt, file3.txtにマッチ</p>
-<p>$ rm temp*                  # tempで始まるすべてのファイルを削除</p>
-<p>💡 <strong>ヒント</strong>: ワイルドカードは多くのコマンドで使用できます。ただし、予想以上に多くのファイルが対象になる場合があるので、特に削除系のコマンドでは事前に<code>ls</code>で確認することを推奨します。</p>
-</blockquote>
+<p>「dir」を含むディレクトリを詳細表示：</p>
+<div class="terminal">
+    <p>$ ls -ld *dir*</p>
+</div>
+<p>「dir」+（1文字）のディレクトリにマッチ：</p>
+<div class="terminal">
+    <p>$ ls -ld dir?</p>
+</div>
+<p>dir1、dir2にマッチし、dir3にマッチしない：</p>
+<div class="terminal">
+    <p>$ ls -ld dir[12]</p>
+</div>
+<p>newで始まるすべてのファイルとディレクトリを削除：</p>
+<div class="terminal">
+    <p>$ rm -r new*</p>
+</div>
+<div class="note-box tip">
+    <p>ワイルドカードは多くのコマンドで使用できます。ただし、予想以上に多くのファイルが対象になる場合があるので、特に削除系のコマンドでは事前に<code>ls</code>で確認することを推奨します。</p>
+</div>
 <h2>おわりに</h2>
 <p>ファイル操作は、Linuxを使用する上で最も基本的かつ重要なスキルです。今回学んだコマンドを組み合わせて、効率的にファイルシステムを操作できるようになりましょう。</p>
