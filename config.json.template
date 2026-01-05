@@ -1,10 +1,19 @@
 {
-  "initial_organizations": ["東京", "福岡"],
+  "roles": [
+    {"id": 0, "name": "管理者"},
+    {"id": 1, "name": "ユーザー"},
+    {"id": 2, "name": "運用者"}
+  ],
+  "organizations": [
+    {"id": 0, "name": "東京"},
+    {"id": 1, "name": "福岡"},
+    {"id": 2, "name": "大阪"}
+  ],
   "admin_user": {
-    "email": "admin@example.com",
-    "last_name": "管理者",
-    "first_name": "001",
-    "organization": "福岡",
+    "email": "admin@cri-me.com",
+    "last_name": "山田",
+    "first_name": "太郎",
+    "organization_id": 0,
     "password": "Admin!123"
   }
 }
