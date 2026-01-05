@@ -3,134 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ユーザー一覧 - CRI勉強会</title>
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
-  <style>
-    .table-container {
-      overflow-x: auto;
-      margin: 20px 0;
-      border: 1px solid #000;
-    }
-    .users-table {
-      width: 100%;
-      min-width: 1000px;
-      border-collapse: collapse;
-      margin: 0;
-    }
-    .users-table th, .users-table td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: left;
-      white-space: nowrap;
-    }
-    .users-table th {
-      background-color: #f0f0f0;
-      font-weight: bold;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    /* 列幅の調整 */
-    .users-table th:nth-child(1), .users-table td:nth-child(1) { width: 200px; } /* メールアドレス */
-    .users-table th:nth-child(2), .users-table td:nth-child(2) { width: 120px; } /* 氏名 */
-    .users-table th:nth-child(3), .users-table td:nth-child(3) { width: 80px; } /* 所属 */
-    .users-table th:nth-child(4), .users-table td:nth-child(4) { width: 80px; } /* 種別 */
-    .users-table th:nth-child(5), .users-table td:nth-child(5) { width: 80px; } /* 受講状況 */
-    .users-table th:nth-child(6), .users-table td:nth-child(6) { width: 140px; } /* 登録日時 */
-    .users-table th:nth-child(7), .users-table td:nth-child(7) { width: 180px; } /* 操作 */
-    .admin-badge {
-      background-color: #007bff;
-      color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    .user-badge {
-      background-color: #28a745;
-      color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    .complete-badge {
-      background-color: #28a745;
-      color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    .progress-badge {
-      background-color: #ffc107;
-      color: #212529;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    .action-buttons {
-      display: flex;
-      gap: 3px;
-      flex-wrap: wrap;
-    }
-    .btn-small {
-      padding: 3px 6px;
-      font-size: 11px;
-      text-decoration: none;
-      border: 1px solid;
-      display: inline-block;
-      text-align: center;
-      white-space: nowrap;
-      min-width: 70px;
-    }
-    .btn-warning {
-      background-color: #ffc107;
-      color: #212529;
-      border-color: #ffc107;
-    }
-    .btn-danger {
-      background-color: #dc3545;
-      color: white;
-      border-color: #dc3545;
-    }
-    .btn-small:hover {
-      opacity: 0.8;
-    }
-    
-    /* レスポンシブデザイン */
-    @media (max-width: 768px) {
-      .users-table {
-        min-width: 800px;
-      }
-      .users-table th, .users-table td {
-        padding: 6px;
-        font-size: 14px;
-      }
-      .btn-small {
-        padding: 2px 4px;
-        font-size: 10px;
-        min-width: 60px;
-      }
-    }
-    
-    /* スクロールバーのスタイル */
-    .table-container::-webkit-scrollbar {
-      height: 8px;
-    }
-    .table-container::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-    .table-container::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 4px;
-    }
-    .table-container::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>ユーザー一覧</h1>
+      <h1>CRI勉強会 - Linux入門</h1>
     </header>
 
     <main>
@@ -140,10 +20,14 @@
       {% if success_message %}
       <div style="padding: 15px; margin-bottom: 20px; background-color: #e8f5e8; color: #2d5a2d; border: 2px solid #28a745;">
         <strong>成功:</strong>
-        {% if success_message == 'password_changed' %}
+        {% if success_message == 'user_registered' %}
+          ユーザーが登録されました。        
+        {% elif success_message == 'password_changed' %}
           パスワードが変更されました。
         {% elif success_message == 'user_deleted' %}
           ユーザーが削除されました。
+        {% elif success_message == 'role_changed' %}
+          ロールが変更されました。
         {% else %}
           {{ success_message }}
         {% endif %}
@@ -151,21 +35,26 @@
       {% endif %}
       
       {% if error_message %}
-      <div style="padding: 15px; margin-bottom: 20px; background-color: #ffe8e8; color: #7a2d2d; border: 2px solid #dc3545;">
+      <div style="padding: 15px; margin-bottom: 20px; background-color: #ffe8e8; color: #c41e3a; border: 2px solid #dc3545;">
         <strong>エラー:</strong>
-        {% if error_message == 'cannot_delete_self' %}
-          自分自身のアカウントは削除できません。
+        {% if error_message == 'cannot_change_own_role' %}
+          自分自身のロールは変更できません。
+        {% elif error_message == 'user_not_found' %}
+          ユーザーが見つかりません。
+        {% elif error_message == 'user_registration_failed' %}
+          ユーザー登録に失敗しました。
+        {% elif error_message == 'cannot_delete_self' %}
+          自分自身は削除できません。
         {% elif error_message == 'cannot_delete_admin' %}
-          管理者アカウントは削除できません。
-        {% elif error_message == 'already_deleted' %}
-          このユーザーは既に削除されています。
+          管理者ユーザーは削除できません。
         {% else %}
           {{ error_message }}
         {% endif %}
       </div>
       {% endif %}
+      
 
-      <h2>登録ユーザー ({{ user_statuses|length }}人)</h2>
+      <h2>ユーザー一覧 ({{ user_statuses|length }}人)</h2>
       
       {% if user_statuses %}
       <div class="table-container">
@@ -178,7 +67,9 @@
               <th>種別</th>
               <th>受講状況</th>
               <th>登録日時</th>
-              <th>操作</th>
+              {% if current_user.is_admin %}
+              <th>管理操作</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -189,8 +80,10 @@
               <td>{{ user.last_name }} {{ user.first_name }}</td>
               <td>{{ user.organization_rel.name }}</td>
               <td>
-                {% if user.is_admin %}
+                {% if user.role_id == 0 %}
                   <span class="admin-badge">管理者</span>
+                {% elif user.role_id == 2 %}
+                  <span class="operator-badge">運用者</span>
                 {% else %}
                   <span class="user-badge">受講者</span>
                 {% endif %}
@@ -203,14 +96,15 @@
                 {% endif %}
               </td>
               <td>{{ user.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+              {% if current_user.is_admin %}
               <td>
                 <div class="action-buttons">
-                  <a href="/admin/users/{{ user.id }}/change-password" class="btn btn-small btn-warning">パスワード変更</a>
-                  {% if not user.is_admin %}
-                    <button onclick="deleteUser({{ user.id }})" class="btn btn-small btn-danger">削除</button>
-                  {% endif %}
+                  <a href="/admin/users/{{ user.id }}/chpasswd" class="btn-yellow">パスワード変更</a>
+                  <a href="/admin/users/{{ user.id }}/userdel" class="btn-red">ユーザー削除</a>
+                  <a href="/admin/users/{{ user.id }}/roleedit" class="btn-blue">ロール変更</a>
                 </div>
               </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
@@ -223,39 +117,10 @@
 
     <footer>
       <div class="footer-actions">
-          <a href="/admin" class="btn btn-secondary">管理者ダッシュボードに戻る</a>
+          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
       </div>
-      <p>&copy; 2025 CRI勉強会</p>
+      <p>&copy; CRI勉強会</p>
     </footer>
   </div>
-  
-  <script>
-    async function deleteUser(userId) {
-      if (!confirm('本当にこのユーザーを削除しますか？')) {
-        return;
-      }
-      
-      try {
-        const response = await fetch(`/api/admin/users/${userId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          alert('ユーザーを削除しました');
-          location.reload(); // ページをリロードして更新
-        } else {
-          const error = await response.json();
-          alert('削除に失敗しました: ' + (error.detail || '不明なエラー'));
-        }
-      } catch (error) {
-        console.error('削除エラー:', error);
-        alert('削除に失敗しました');
-      }
-    }
-  </script>
 </body>
 </html>

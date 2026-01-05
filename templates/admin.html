@@ -3,43 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>管理者ダッシュボード - CRI勉強会</title>
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
-  <style>
-    .admin-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin: 20px 0;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .admin-menu .btn {
-      width: 100%;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>管理者ダッシュボード</h1>
+      <h1>CRI勉強会 - Linux入門</h1>
     </header>
 
     <main>
       <div class="admin-menu">
-        <a href="/admin/users" class="btn btn-secondary btn-large">ユーザー一覧</a>
-        <a href="/admin/register" class="btn btn-secondary btn-large">ユーザー登録</a>
-        <a href="/admin/history" class="btn btn-secondary btn-large">受験履歴</a>
+        <a href="/admin/users" class="btn btn-large">ユーザー管理</a>
+        <a href="/admin/register" class="btn btn-large">ユーザー登録</a>
+        <a href="/admin/history" class="btn btn-large">受験履歴</a>
       </div>
     </main>
 
     <footer>
       <div class="footer-actions">
-          <a href="/" class="btn btn-secondary">トップに戻る</a>
+          <a href="/" class="btn">トップに戻る</a>
       </div>
-      <p>&copy; 2025 CRI勉強会</p>
+      <p>&copy; CRI勉強会</p>
     </footer>
+
   </div>
 </body>
 </html>

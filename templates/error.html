@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>エラー - CRI勉強会</title>
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>エラー</h1>
+      <h1>CRI勉強会 - Linux入門</h1>
     </header>
 
     <main>
-      <div class="error-content">
-        <h2>{{ message }}</h2>
+      <div class="content-box error-content">
         <p>エラーが発生しました。</p>
-        <a href="/" class="btn btn-primary">トップに戻る</a>
+        <a href="/" class="btn">トップに戻る</a>
       </div>
     </main>
 
     <footer>
-      <p>&copy; 2025 CRI勉強会</p>
+      <p>&copy; CRI勉強会</p>
     </footer>
   </div>
 </body>

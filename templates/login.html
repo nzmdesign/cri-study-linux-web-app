@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ログイン - CRI勉強会</title>
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
@@ -13,10 +14,19 @@
     </header>
 
     <main>
-      <div class="start-content">
-        {% if error %}
-        <p style="color: red;">{{ error }}</p>
+      <div class="content-box start-content">
+        {% set error_message = request.query_params.get('error') %}
+        {% if error_message %}
+        <div class="message error">
+          <strong>エラー:</strong>
+          {% if error_message == 'invalid_credentials' %}
+            メールアドレスまたはパスワードが正しくありません。
+          {% else %}
+            {{ error_message }}
+          {% endif %}
+        </div>
         {% endif %}
+        
         <form method="post" action="/login">
           <div style="margin-bottom:10px;">
             <label>メールアドレス<br><input type="email" name="email" required placeholder="user@cri-me.com"></label>
@@ -25,19 +35,19 @@
             <label>パスワード<br><input type="password" name="password" required></label>
           </div>
           <div>
-            <button class="btn btn-primary" type="submit">ログイン</button>
+            <button class="btn" type="submit">ログイン</button>
           </div>
         </form>
         
         <div style="margin-top: 30px; text-align: center; border-top: 1px solid #ddd; padding-top: 20px;">
           <p style="margin-bottom: 15px;">はじめての方はこちら</p>
-          <a href="/guide" class="btn btn-secondary">受講案内</a>
+          <a href="/guide" class="btn">受講案内</a>
         </div>
       </div>
     </main>
 
     <footer>
-      <p>&copy; 2025 CRI勉強会</p>
+      <p>&copy; CRI勉強会</p>
     </footer>
   </div>
 </body>

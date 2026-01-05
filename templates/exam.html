@@ -3,16 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ exam.title }} - Linux入門</title>
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>{{ exam.title }}</h1>
+      <h1>CRI勉強会 - Linux入門</h1>
     </header>
 
     <main>
+      <div class="content">
+        <h1>{{ exam.title }}</h1>
+      </div>
       <section id="exam-form-section">
         <p>以下の全ての問題に回答して「送信」を押すと採点されて結果が表示されます。</p>
 
@@ -33,7 +37,7 @@
           {% endfor %}
 
           <div style="margin-top: 20px; text-align: center;">
-            <button type="submit" id="submit-btn" class="btn btn-primary">送信</button>
+            <button type="submit" id="submit-btn" class="btn">送信</button>
           </div>
         </form>
 
@@ -41,9 +45,9 @@
     </main>
     <footer>
       <div class="footer-actions">
-        <a href="/" class="btn btn-secondary">トップに戻る</a>
+        <a href="/" class="btn">トップに戻る</a>
       </div>
-      <p>&copy; 2025 CRI勉強会</p>
+      <p>&copy; CRI勉強会</p>
     </footer>
   </div>
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CRI勉強会 - Linux入門</h1>
+    </header>
+
+    <main>
+      <h2>パスワード変更</h2>
+
+      <div class="user-info">
+        <h3>対象ユーザー</h3>
+        <p><strong>メールアドレス:</strong> {{ target_user.email }}</p>
+        <p><strong>氏名:</strong> {{ target_user.last_name }} {{ target_user.first_name }}</p>
+        <p><strong>所属:</strong> {{ target_user.organization_rel.name }}</p>
+        <p><strong>現在のロール:</strong> {{ target_user.role.name }}</p>
+      </div>
+
+      <div class="simple-form">
+      
+        {% set error_message = request.query_params.get('error') %}
+        {% if error_message %}
+        <div class="message error">
+          <strong>エラー:</strong>
+          {% if error_message == 'password_mismatch' %}
+            パスワードが一致しません。
+          {% else %}
+            {{ error_message }}
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/admin/users/{{ target_user.id }}/chpasswd">
+          <div class="form-group">
+            <label for="new_password">新しいパスワード</label>
+            <input type="password" id="new_password" name="new_password" required placeholder="新しいパスワードを入力">
+          </div>
+          
+          <div class="form-group">
+            <label for="confirm_password">新しいパスワード（再入力）</label>
+            <input type="password" id="confirm_password" name="confirm_password" required placeholder="パスワードを再度入力">
+          </div>
+          
+          <div style="margin-top: 30px;">
+            <button type="submit" class="btn">変更</button>
+            <button type="button" class="btn" onclick="window.location.href='/admin/users'" style="margin-left: 10px;">キャンセル</button>
+          </div>
+
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-actions">
+          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
+      </div>
+      <p>&copy; CRI勉強会</p>
+    </footer>
+
+  </div>
+</body>
+</html>

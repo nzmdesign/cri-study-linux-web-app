@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CRI勉強会 - Linux入門</h1>
+    </header>
+
+    <main>
+      <h2>ユーザー削除</h2>
+
+      {% set error_message = request.query_params.get('error') %}
+      {% if error_message %}
+      <div class="message error">
+        <strong>エラー:</strong>
+        {{ error_message }}
+      </div>
+      {% endif %}
+
+      <div class="user-info">
+        <h3>対象ユーザー</h3>
+        <p><strong>メールアドレス:</strong> {{ target_user.email }}</p>
+        <p><strong>氏名:</strong> {{ target_user.last_name }} {{ target_user.first_name }}</p>
+        <p><strong>所属:</strong> {{ target_user.organization_rel.name }}</p>
+        <p><strong>現在のロール:</strong> {{ target_user.role.name }}</p>
+      </div>
+
+      <div class="simple-form">
+        <p>本当にこのユーザーを削除してもよろしいですか？</p>
+        <form method="POST" action="/admin/users/{{ target_user.id }}/userdel">
+          <div style="margin-top: 20px;">
+            <button type="submit" class="btn">削除</button>
+            <button type="button" class="btn" onclick="window.location.href='/admin/users'" style="margin-left: 10px;">キャンセル</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-actions">
+          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
+      </div>
+      <p>&copy; CRI勉強会</p>
+    </footer>
+  </div>
+</body>
+</html>

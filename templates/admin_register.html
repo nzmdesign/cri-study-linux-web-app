@@ -3,42 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ユーザー登録 - CRI勉強会</title>
+  <title>CRI勉強会 - Linux入門</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
-  <style>
-    .register-form {
-      border: 2px solid #000;
-      padding: 30px;
-      margin: 0 auto 20px auto;
-      max-width: 500px;
-      text-align: center;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-      text-align: left;
-    }
-    .form-group label {
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    .form-group input, .form-group select {
-      padding: 12px;
-      border: 2px solid #000;
-      font-size: 1rem;
-    }
-    .message {
-      padding: 15px;
-      margin-bottom: 20px;
-      border: 2px solid #000;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .success { background-color: #e8f5e8; color: #2d5a2d; }
-    .error { background-color: #ffe8e8; color: #7a2d2d; }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -46,21 +13,28 @@
       <h1>CRI勉強会 - Linux入門</h1>
     </header>
 
-    <main>
-      {% if register_error %}
-      <div class="message error">
-        <strong>エラー:</strong> {{ register_error }}
-      </div>
-      {% endif %}
-      
-      {% if register_success %}
-      <div class="message success">
-        <strong>成功:</strong> {{ register_success }}
-      </div>
-      {% endif %}
-      
+    <main>      
       <div class="register-form">
         <h2>ユーザー登録</h2>
+
+        {% set error_code = request.query_params.get('error') %}
+        {% if error_code %}
+        <div class="message error">
+          <strong>エラー:</strong>
+          {% if error_code == 'password_mismatch' %}
+            パスワードが一致しません
+          {% elif error_code == 'password_too_short' %}
+            パスワードは4文字以上にしてください
+          {% elif error_code == 'email_already_exists' %}
+            このメールアドレスは既に使用されています
+          {% elif error_code == 'organization_not_found' %}
+            事業部が見つかりません
+          {% else %}
+            ユーザー登録に失敗しました
+          {% endif %}
+        </div>
+        {% endif %}
+        
         <form method="POST" action="/admin/register">
           <div class="form-group">
             <label for="email">メールアドレス</label>
@@ -88,14 +62,6 @@
           </div>
 
           <div class="form-group">
-            <label for="is_admin">ユーザー種別</label>
-            <select id="is_admin" name="is_admin">
-              <option value="false">受講者</option>
-              <option value="true">管理者</option>
-            </select>
-          </div>
-
-          <div class="form-group">
             <label for="organization">所属</label>
             <select id="organization" name="organization" required>
               <option value="">所属を選択してください</option>
@@ -105,19 +71,21 @@
             </select>
           </div>
 
-          <div style="margin-top: 20px;">
-            <button type="submit" class="btn btn-primary">ユーザーを登録</button>
+          <div>
+            <button type="submit" class="btn">登録</button>
           </div>
+
         </form>
       </div>
     </main>
 
     <footer>
       <div class="footer-actions">
-          <a href="/admin" class="btn btn-secondary">管理者ダッシュボードに戻る</a>
+          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
       </div>
-      <p>&copy; 2025 CRI勉強会</p>
+      <p>&copy; CRI勉強会</p>
     </footer>
+
   </div>
 </body>
 </html>
