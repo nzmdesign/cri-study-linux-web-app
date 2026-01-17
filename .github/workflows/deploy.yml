@@ -18,10 +18,17 @@ jobs:
       uses: webfactory/ssh-agent@v0.8.0
       with:
         ssh-private-key: ${{ secrets.EC2_KEY }}
+    
+    - name: Resolve EC2 hostname to IP
+      id: resolve_ec2
+      run: |
+        EC2_HOSTNAME=${{ vars.EC2_HOSTNAME }}
+        EC2_HOST=$(getent hosts "$EC2_HOSTNAME" | awk '{print $1}')
+        echo "EC2_HOST=${EC2_HOST}" >> "$GITHUB_OUTPUT"
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+        ssh -o StrictHostKeyChecking=no ${{ vars.EC2_USER }}@${{ steps.resolve_ec2.outputs.EC2_HOST }} "
           cd /var/www/cri-study-linux-web-app &&
           git pull &&
           /var/www/cri-study-linux-web-app/venv/bin/pip install -r requirements.txt &&
