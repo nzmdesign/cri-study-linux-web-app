@@ -1,6 +1,7 @@
 import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from datetime import datetime
 from models.database import create_tables
 from database import initialize_database
 from routers import auth_router, content_router, exam_router, admin_router
@@ -10,6 +11,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+# ヘルスチェックエンドポイント
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat()
+    }
 
 # 静的ファイルの設定
 app.mount("/static", StaticFiles(directory="static"), name="static")
