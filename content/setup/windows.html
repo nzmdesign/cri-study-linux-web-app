@@ -11,6 +11,16 @@
     <p>Windows Subsystem for Linux 2 (以下、WSL2) はWindows標準で提供されている機能で、LinuxをWindows上で動作させることができます。以下の手順に従ってWSL2をインストールしてください。</p>
     <ol>
         <li>管理者権限でPowerShellを起動します。スタートメニューを右クリックし、「Windows PowerShell (管理者)」または「ターミナル（管理者）」を選択します。</li>
+        <li>WSLがインストールされているか確認するため、以下のコマンドを入力して実行します。
+            <div class="terminal">
+                <p>wsl</p>
+            </div>
+            <p>WSLがインストールされている場合は、WSLが起動して以下のようなプロンプトが表示されます。以降の手順は不要です。</p>
+            <div class="terminal">
+                <p>xnter@DESKTOP-NBGO3I5:/mnt/c/Windows/System32$</p>
+            </div>
+            <p>WSLがインストールされていない場合は、エラーが表示されます。次の手順に進んでください。</p>
+        </li>
         <li>以下のコマンドを入力して、WSLと必要なコンポーネントをインストールします。
             <div class="terminal">
                 <p>wsl --install</p>
