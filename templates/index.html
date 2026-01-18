@@ -12,7 +12,8 @@
     <header>
       <h1>CRI勉強会 - Linux入門</h1>
       <div style="text-align: right; margin-top: 10px;">
-        こんにちは、{{ current_user.last_name }} {{ current_user.first_name }} さん
+        {{ current_user.last_name }} {{ current_user.first_name }} さん
+        <a href="/guide" class="btn btn-small">受講案内</a>
         <a href="/mypage" class="btn btn-small">マイページ</a>
         {% if current_user.can_manage %}
         <a href="/admin" class="btn btn-small">管理ダッシュボード</a>
