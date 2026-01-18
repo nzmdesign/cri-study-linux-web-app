@@ -1,31 +1,48 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>CRI勉強会 - Linux入門</h1>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
+        <nav class="border-t border-slate-200 pt-4">
+          <div class="flex justify-end items-center">
+            <ul class="flex gap-6">
+              <li><a href="/manual" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">運用マニュアル</a></li>
+              <li><a href="/" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">トップに戻る</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <div class="admin-menu">
-        <a href="/admin/users" class="btn btn-large">ユーザー管理</a>
-        <a href="/admin/register" class="btn btn-large">ユーザー登録</a>
-        <a href="/admin/history" class="btn btn-large">受験履歴</a>
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+      <div class="w-full max-w-3xl">
+
+        <div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all border border-slate-100">
+          <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-slate-800 mb-3">管理ダッシュボード</h2>
+          </div>
+          <div class="space-y-4 max-w-md mx-auto">
+            <a href="/admin/users" class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-md hover:shadow-lg text-center">ユーザー管理</a>
+            <a href="/admin/register" class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-md hover:shadow-lg text-center">ユーザー登録</a>
+            <a href="/admin/history" class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-md hover:shadow-lg text-center">受験履歴</a>
+          </div>
+        </div>
+
       </div>
     </main>
 
-    <footer>
-      <div class="footer-actions">
-          <a href="/" class="btn">トップに戻る</a>
-      </div>
-      <p>&copy; CRI勉強会</p>
+    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
+      <p class="text-slate-600">&copy; CRI勉強会</p>
     </footer>
 
   </div>
