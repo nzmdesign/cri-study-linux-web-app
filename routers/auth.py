@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, Form, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from models.database import get_db
@@ -42,11 +42,18 @@ async def login(
     user = auth_service.authenticate(email, password)
     
     if not user:
-        return RedirectResponse(url="/login?error=invalid_credentials", status_code=302)
+        error_html = '''
+        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <strong class="text-red-800">エラー:</strong>
+          <p class="text-red-700 mt-1">メールアドレスまたはパスワードが正しくありません。</p>
+        </div>
+        '''
+        return HTMLResponse(content=error_html, status_code=200)
     
     # 認証成功
     login_hash = auth_service.generate_login_hash(user)
-    response = RedirectResponse(url='/', status_code=302)
+    response = Response(status_code=200)
+    response.headers["HX-Redirect"] = "/"
     response.set_cookie(key="user", value=email, httponly=True, secure=False, samesite="strict")
     response.set_cookie(key="login_hash", value=login_hash, httponly=True, secure=False, samesite="strict")
     return response
