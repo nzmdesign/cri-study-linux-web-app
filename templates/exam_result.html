@@ -5,35 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>{{ exam_title }}</h1>
-      <h2>試験結果</h2>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
+        <nav class="border-t border-slate-200 pt-4">
+          <div class="flex justify-end items-center">
+            <ul class="flex gap-6">
+              <li><a href="/" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">トップに戻る</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <section class="result-section">
-        <div class="result-summary">
-          <div class="result-status {{ 'pass' if is_passed else 'fail' }}">
-            <h2>{{ '合格' if is_passed else '不合格' }}</h2>
-          </div>
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+      <div class="w-full max-w-2xl">
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
+          <h2 class="text-3xl font-bold text-slate-800 mb-6 text-center border-b-2 border-blue-500 pb-3">{{ exam_title }}</h2>
           
-          <div class="score-display">
-            <p class="score-text">正解数: {{ correct_count }} / {{ total_questions }}</p>
+          <div class="text-center mb-8">
+            <h3 class="text-2xl font-semibold text-slate-700 mb-6">試験結果</h3>
+            
+            <div class="mb-8">
+              {% if is_passed %}
+              <div class="bg-green-50 border-2 border-green-500 rounded-lg p-8">
+                <div class="text-6xl mb-4">✅</div>
+                <div class="text-4xl font-bold text-green-600">合格</div>
+              </div>
+              {% else %}
+              <div class="bg-red-50 border-2 border-red-500 rounded-lg p-8">
+                <div class="text-6xl mb-4">❌</div>
+                <div class="text-4xl font-bold text-red-600">不合格</div>
+              </div>
+              {% endif %}
+            </div>
+            
+            <div class="bg-slate-50 rounded-lg p-6 border border-slate-200">
+              <p class="text-2xl font-semibold text-slate-800">正解数: {{ correct_count }} / {{ total_questions }}</p>
+            </div>
           </div>
-        </div>
 
-      </section>
+        </div>
+      </div>
     </main>
 
-    <footer>
-      <div class="footer-actions">
-        <a href="/" class="btn">トップに戻る</a>
-      </div>
-      <p>&copy; CRI勉強会</p>
+    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
+      <a href="/" class="inline-block bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg transition-colors mb-4">トップに戻る</a>
+      <p class="text-slate-600">&copy; CRI勉強会</p>
     </footer>
   </div>
 </body>
