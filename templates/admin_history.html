@@ -5,57 +5,70 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>CRI勉強会 - Linux入門</h1>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
+        <nav class="border-t border-slate-200 pt-4">
+          <div class="flex justify-end items-center">
+            <ul class="flex gap-6">
+              <li><a href="/admin" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">管理ダッシュボードに戻る</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <h2>受験履歴</h2>
-      {% if results %}
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th>メールアドレス</th>
-              <th>氏名</th>
-              <th>問題集</th>
-              <th>結果</th>
-              <th>正解数</th>
-              <th>実施日時</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for result in results %}
-            <tr>
-              <td>{{ result.user.email }}</td>
-              <td>{{ result.user.last_name }} {{ result.user.first_name }}</td>
-              <td>第{{ result.exam_id }}回</td>
-              <td>
-                {% if result.correct_count == result.total_questions %}
-                <span class="status-badge status-pass">合格</span>
-                {% else %}
-                <span class="status-badge status-fail">不合格</span>
-                {% endif %}
-              </td>
-              <td>{{ result.correct_count }} / {{ result.total_questions }}</td>
-              <td>{{ result.timestamp.strftime("%Y-%m-%d %H:%M") }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p>受験履歴がありません。</p>
-      {% endif %}
+    <main class="flex-grow px-4 py-12">
+      <div class="w-full max-w-6xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
+          <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">受験履歴</h2>
+          
+          {% if results %}
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b-2 border-slate-300 bg-slate-100">
+                    <th class="text-left px-4 py-3 font-semibold text-slate-700">メールアドレス</th>
+                    <th class="text-left px-4 py-3 font-semibold text-slate-700">氏名</th>
+                    <th class="text-left px-4 py-3 font-semibold text-slate-700">問題集</th>
+                    <th class="text-left px-4 py-3 font-semibold text-slate-700">結果</th>
+                    <th class="text-left px-4 py-3 font-semibold text-slate-700">正解数</th>
+                    <th class="text-left px-4 py-3 font-semibold text-slate-700">実施日時</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for result in results %}
+                  <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 text-slate-700">{{ result.user.email }}</td>
+                    <td class="px-4 py-3 text-slate-700">{{ result.user.last_name }} {{ result.user.first_name }}</td>
+                    <td class="px-4 py-3 text-slate-700">第{{ result.exam_id }}回</td>
+                    <td class="px-4 py-3">
+                      {% if result.correct_count == result.total_questions %}
+                      <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">合格</span>
+                      {% else %}
+                      <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">不合格</span>
+                      {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-slate-700">{{ result.correct_count }} / {{ result.total_questions }}</td>
+                    <td class="px-4 py-3 text-slate-700">{{ result.timestamp.strftime("%Y-%m-%d %H:%M") }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-slate-700 text-center py-8">受験履歴がありません。</p>
+          {% endif %}
+        </div>
+      </div>
     </main>
 
-    <footer>
-      <div class="footer-actions">
-          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
-      </div>
-      <p>&copy; CRI勉強会</p>
+    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
+      <p class="text-slate-600">&copy; CRI勉強会</p>
     </footer>
   </div>
 </body>
