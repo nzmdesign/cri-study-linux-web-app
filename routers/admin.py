@@ -224,22 +224,30 @@ def change_password(
         )
     
     if new_password != confirm_password:
-        return RedirectResponse(
-            url=f"/admin/users/{user_id}/chpasswd?error=password_mismatch",
-            status_code=302
-        )
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: パスワードが一致しません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
     user_service = UserService(db)
     target_user = user_service.update_password(user_id, new_password)
     
     if not target_user:
-        return templates.TemplateResponse(
-            "error.html",
-            {"request": request, "message": "ユーザーが見つかりません"},
-            status_code=404
-        )
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
-    return RedirectResponse(url="/admin/users?success=password_changed", status_code=302)
+    success_html = """
+    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+        <p class="text-green-700 font-semibold">パスワードを変更しました。</p>
+    </div>
+    """
+    return HTMLResponse(content=success_html)
 
 @router.get("/users/{user_id}/userdel", response_class=HTMLResponse)
 def delete_user_page(
@@ -275,6 +283,7 @@ def delete_user_page(
 @router.post("/users/{user_id}/userdel")
 def delete_user(
     user_id: int,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
