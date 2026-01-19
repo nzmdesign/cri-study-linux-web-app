@@ -5,25 +5,184 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <style>
+    /* コンテンツ内のスタイリング */
+    .content h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 0.75rem;
+    }
+    .content h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+    .content h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .content p {
+      color: #334155;
+      margin-bottom: 1rem;
+      line-height: 1.75;
+    }
+    .content ul, .content ol {
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+      color: #334155;
+    }
+    .content ul {
+      list-style-type: disc;
+      list-style-position: inside;
+    }
+    .content ol {
+      list-style-type: decimal;
+      list-style-position: inside;
+    }
+    .content li {
+      margin-bottom: 0.5rem;
+    }
+    .content code {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      font-family: monospace;
+    }
+    .content pre {
+      background-color: #1e293b;
+      color: #f1f5f9;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+    .content a {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+    .content a:hover {
+      color: #1e40af;
+    }
+    .content strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .content .terminal {
+      background-color: #0f172a;
+      color: #4ade80;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+    .content .terminal p {
+      margin-bottom: 0;
+      color: #4ade80;
+    }
+    .content .note-box {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid;
+      display: flex;
+      gap: 0.75rem;
+    }
+    .content .note-box::before {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+    .content .note-box.note {
+      background-color: #eff6ff;
+      border-color: #3b82f6;
+    }
+    .content .note-box.note::before {
+      content: "📝";
+    }
+    .content .note-box.tip {
+      background-color: #f0fdf4;
+      border-color: #22c55e;
+    }
+    .content .note-box.tip::before {
+      content: "💡";
+    }
+    .content .note-box.info {
+      background-color: #ecfeff;
+      border-color: #06b6d4;
+    }
+    .content .note-box.info::before {
+      content: "ℹ️";
+    }
+    .content .note-box.warning {
+      background-color: #fefce8;
+      border-color: #eab308;
+    }
+    .content .note-box.warning::before {
+      content: "⚠️";
+    }
+    .content .note-box.success {
+      background-color: #f0fdf4;
+      border-color: #22c55e;
+    }
+    .content .note-box.success::before {
+      content: "✅";
+    }
+    .content .note-box.error {
+      background-color: #fef2f2;
+      border-color: #ef4444;
+    }
+    .content .note-box.error::before {
+      content: "🚫";
+    }
+    .content .note-box p {
+      margin-bottom: 0;
+      color: #334155;
+    }
+  </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>CRI勉強会 - Linux入門</h1>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
+        <nav class="border-t border-slate-200 pt-4">
+          <div class="flex justify-end items-center">
+            <ul class="flex gap-6">
+              <li><a href="/" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">トップに戻る</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <div class="content">
-        {{ content | safe }}
+    <main class="flex-grow px-4 py-12">
+      <div class="w-full max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
+          <div class="content">
+            {{ content | safe }}
+          </div>
+        </div>
       </div>
     </main>
 
-    <footer>
-      <div class="footer-actions">
-        <a href="/" class="btn">トップに戻る</a>
-      </div>
-      <p>&copy; CRI勉強会</p>
+    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
+      <a href="/" class="inline-block bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg transition-colors mb-4">トップに戻る</a>
+      <p class="text-slate-600">&copy; CRI勉強会</p>
     </footer>
   </div>
 </body>
