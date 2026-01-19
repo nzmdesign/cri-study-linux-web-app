@@ -299,9 +299,21 @@ def delete_user(
     error_code = user_service.delete_user(user_id, current_user.id)
     
     if error_code:
-        return RedirectResponse(url=f"/admin/users?error={error_code}", status_code=302)
+        error_messages = {
+            "cannot_delete_self": "自分自身を削除することはできません。",
+            "user_not_found": "ユーザーが見つかりません。"
+        }
+        error_msg = error_messages.get(error_code, error_code)
+        error_html = f"""
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: {error_msg}</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
-    return RedirectResponse(url="/admin/users?success=user_deleted", status_code=302)
+    return HTMLResponse(
+        content='<div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6"><p class="text-green-700 font-semibold">ユーザーを削除しました。</p></div>'
+    )
 
 @router.get("/users/{user_id}/roleedit")
 def edit_role_page(
