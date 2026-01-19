@@ -144,10 +144,12 @@ async def register_user(
     
     error_msg = user_service.validate_registration(email, password, confirm_password, first_name, last_name, organization)
     if error_msg:
-        return RedirectResponse(
-            url=f'/admin/register?error={error_msg}',
-            status_code=302
-        )
+        error_html = f"""
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: {error_msg}</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
     try:
         user_service.create_user(
@@ -158,17 +160,20 @@ async def register_user(
             organization_name=organization
         )
         
-        return RedirectResponse(
-            url=f'/admin/users?success=user_registered',
-            status_code=302
-        )
+        success_html = """
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+            <p class="text-green-700 font-semibold">ユーザーを登録しました</p>
+        </div>
+        """
+        return HTMLResponse(content=success_html)
 
     except Exception as e:
-        print(f"User registration error: {e}")  # デバッグ用
-        return RedirectResponse(
-            url=f'/admin/register?error=user_registration_failed',
-            status_code=302
-        )
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザー登録に失敗しました</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
 
 @router.get("/users/{user_id}/chpasswd", response_class=HTMLResponse)
 def change_password_page(
@@ -219,22 +224,30 @@ def change_password(
         )
     
     if new_password != confirm_password:
-        return RedirectResponse(
-            url=f"/admin/users/{user_id}/chpasswd?error=password_mismatch",
-            status_code=302
-        )
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: パスワードが一致しません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
     user_service = UserService(db)
     target_user = user_service.update_password(user_id, new_password)
     
     if not target_user:
-        return templates.TemplateResponse(
-            "error.html",
-            {"request": request, "message": "ユーザーが見つかりません"},
-            status_code=404
-        )
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
-    return RedirectResponse(url="/admin/users?success=password_changed", status_code=302)
+    success_html = """
+    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+        <p class="text-green-700 font-semibold">パスワードを変更しました。</p>
+    </div>
+    """
+    return HTMLResponse(content=success_html)
 
 @router.get("/users/{user_id}/userdel", response_class=HTMLResponse)
 def delete_user_page(
@@ -270,6 +283,7 @@ def delete_user_page(
 @router.post("/users/{user_id}/userdel")
 def delete_user(
     user_id: int,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -285,9 +299,21 @@ def delete_user(
     error_code = user_service.delete_user(user_id, current_user.id)
     
     if error_code:
-        return RedirectResponse(url=f"/admin/users?error={error_code}", status_code=302)
+        error_messages = {
+            "cannot_delete_self": "自分自身を削除することはできません。",
+            "user_not_found": "ユーザーが見つかりません。"
+        }
+        error_msg = error_messages.get(error_code, error_code)
+        error_html = f"""
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: {error_msg}</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
-    return RedirectResponse(url="/admin/users?success=user_deleted", status_code=302)
+    return HTMLResponse(
+        content='<div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6"><p class="text-green-700 font-semibold">ユーザーを削除しました。</p></div>'
+    )
 
 @router.get("/users/{user_id}/roleedit")
 def edit_role_page(
@@ -341,14 +367,29 @@ def edit_role(
             status_code=403,
         )
     
-    # 自分自身のロール変更は禁止
     if user_id == current_user.id:
-        return RedirectResponse(url="/admin/users?error=cannot_change_own_role", status_code=302)
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: 自分自身のロールは変更できません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
     user_service = UserService(db)
     updated_user = user_service.update_user_role(user_id, role_id)
     
     if not updated_user:
-        return RedirectResponse(url="/admin/users?error=user_not_found", status_code=302)
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
+
+    success_html = """
+    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+        <p class="text-green-700 font-semibold">ロールを変更しました。</p>
+    </div>
+    """
     
-    return RedirectResponse(url="/admin/users?success=role_changed", status_code=302)
+    return HTMLResponse(content=success_html)

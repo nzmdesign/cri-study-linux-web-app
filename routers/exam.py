@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Request, Depends
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Request, Depends, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -42,8 +42,54 @@ async def exam_page(
     return templates.TemplateResponse("exam.html", {
         "request": request,
         "exam": exam,
-        "exam_id": exam_id
+        "exam_id": exam_id,
+        "current_user": current_user
     })
+
+@router.post("/exam/{exam_id}/submit")
+async def submit_exam_form(
+    request: Request,
+    exam_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """フォームからの試験提出"""
+    if not current_user:
+        return RedirectResponse(url='/login', status_code=302)
+    
+    # フォームデータを取得
+    form_data = await request.form()
+    
+    exam_service = ExamService(db)
+    exam = exam_service.get_exam_data(exam_id)
+    
+    if not exam:
+        return templates.TemplateResponse("error.html", {
+            "request": request,
+            "message": "試験が見つかりません"
+        })
+    
+    # フォームデータから回答を抽出
+    answers = []
+    for question in exam["questions"]:
+        field_name = f"answer_{question['id']}"
+        if field_name in form_data:
+            answers.append({
+                "question_id": question['id'],
+                "selected_option": int(form_data[field_name])
+            })
+    
+    try:
+        exam_result = exam_service.submit_exam(current_user.id, exam_id, answers)
+        return RedirectResponse(
+            url=f"/exam/{exam_id}/result/{exam_result.id}",
+            status_code=303
+        )
+    except ValueError as e:
+        return templates.TemplateResponse("error.html", {
+            "request": request,
+            "message": str(e)
+        }, status_code=400)
 
 @router.post("/api/exam/{exam_id}/submit")
 async def submit_exam(

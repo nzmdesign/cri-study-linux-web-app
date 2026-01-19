@@ -5,85 +5,85 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>CRI勉強会 - Linux入門</h1>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
+        <nav class="border-t border-slate-200 pt-4">
+          <div class="flex justify-end items-center">
+            <ul class="flex gap-6">
+              <li><a href="/admin" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">管理ダッシュボード</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main>      
-      <div class="register-form">
-        <h2>ユーザー登録</h2>
+    <main class="flex-grow px-4 py-12">
+      <div class="w-full max-w-2xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
+          <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">ユーザー登録</h2>
 
-        {% set error_code = request.query_params.get('error') %}
-        {% if error_code %}
-        <div class="message error">
-          <strong>エラー:</strong>
-          {% if error_code == 'password_mismatch' %}
-            パスワードが一致しません
-          {% elif error_code == 'password_too_short' %}
-            パスワードは4文字以上にしてください
-          {% elif error_code == 'email_already_exists' %}
-            このメールアドレスは既に使用されています
-          {% elif error_code == 'organization_not_found' %}
-            事業部が見つかりません
-          {% else %}
-            ユーザー登録に失敗しました
-          {% endif %}
-        </div>
-        {% endif %}
+          <div id="message-container"></div>
         
-        <form method="POST" action="/admin/register">
-          <div class="form-group">
-            <label for="email">メールアドレス</label>
-            <input type="email" id="email" name="email" required placeholder="user@cri-me.com">
-          </div>
+          <form hx-post="/admin/register" hx-target="#message-container" hx-swap="innerHTML" class="space-y-5">
+            <div>
+              <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">メールアドレス</label>
+              <input type="email" id="email" name="email" required placeholder="user@cri-me.com"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
+            </div>
 
-          <div class="form-group">
-            <label for="last_name">姓</label>
-            <input type="text" id="last_name" name="last_name" required placeholder="山田">
-          </div>
+            <div>
+              <label for="last_name" class="block text-sm font-semibold text-slate-700 mb-2">姓</label>
+              <input type="text" id="last_name" name="last_name" required placeholder="山田"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
+            </div>
 
-          <div class="form-group">
-            <label for="first_name">名</label>
-            <input type="text" id="first_name" name="first_name" required placeholder="太郎">
-          </div>
+            <div>
+              <label for="first_name" class="block text-sm font-semibold text-slate-700 mb-2">名</label>
+              <input type="text" id="first_name" name="first_name" required placeholder="太郎"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
+            </div>
 
-          <div class="form-group">
-            <label for="password">パスワード</label>
-            <input type="password" id="password" name="password" required placeholder="パスワードを入力">
-          </div>
+            <div>
+              <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">パスワード</label>
+              <input type="password" id="password" name="password" required placeholder="パスワードを入力"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
+            </div>
 
-          <div class="form-group">
-            <label for="confirm_password">パスワード（再入力）</label>
-            <input type="password" id="confirm_password" name="confirm_password" required placeholder="パスワードを再度入力">
-          </div>
+            <div>
+              <label for="confirm_password" class="block text-sm font-semibold text-slate-700 mb-2">パスワード（再入力）</label>
+              <input type="password" id="confirm_password" name="confirm_password" required placeholder="パスワードを再度入力"
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
+            </div>
 
-          <div class="form-group">
-            <label for="organization">所属</label>
-            <select id="organization" name="organization" required>
-              <option value="">所属を選択してください</option>
-              {% for org in organizations %}
-              <option value="{{ org.name }}">{{ org.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
+            <div>
+              <label for="organization" class="block text-sm font-semibold text-slate-700 mb-2">所属</label>
+              <select id="organization" name="organization" required
+                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
+                <option value="">所属を選択してください</option>
+                {% for org in organizations %}
+                <option value="{{ org.name }}">{{ org.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-          <div>
-            <button type="submit" class="btn">登録</button>
-          </div>
-
-        </form>
+            <div>
+              <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
+                登録
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </main>
 
-    <footer>
-      <div class="footer-actions">
-          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
-      </div>
-      <p>&copy; CRI勉強会</p>
+    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
+      <p class="text-slate-600">&copy; CRI勉強会</p>
     </footer>
 
   </div>
