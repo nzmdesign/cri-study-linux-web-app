@@ -144,10 +144,12 @@ async def register_user(
     
     error_msg = user_service.validate_registration(email, password, confirm_password, first_name, last_name, organization)
     if error_msg:
-        return RedirectResponse(
-            url=f'/admin/register?error={error_msg}',
-            status_code=302
-        )
+        error_html = f"""
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: {error_msg}</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
     try:
         user_service.create_user(
@@ -158,17 +160,20 @@ async def register_user(
             organization_name=organization
         )
         
-        return RedirectResponse(
-            url=f'/admin/users?success=user_registered',
-            status_code=302
-        )
+        success_html = """
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+            <p class="text-green-700 font-semibold">ユーザーを登録しました</p>
+        </div>
+        """
+        return HTMLResponse(content=success_html)
 
     except Exception as e:
-        print(f"User registration error: {e}")  # デバッグ用
-        return RedirectResponse(
-            url=f'/admin/register?error=user_registration_failed',
-            status_code=302
-        )
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザー登録に失敗しました</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
 
 @router.get("/users/{user_id}/chpasswd", response_class=HTMLResponse)
 def change_password_page(
