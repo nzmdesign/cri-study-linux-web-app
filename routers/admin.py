@@ -355,14 +355,29 @@ def edit_role(
             status_code=403,
         )
     
-    # 自分自身のロール変更は禁止
     if user_id == current_user.id:
-        return RedirectResponse(url="/admin/users?error=cannot_change_own_role", status_code=302)
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: 自分自身のロールは変更できません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
     
     user_service = UserService(db)
     updated_user = user_service.update_user_role(user_id, role_id)
     
     if not updated_user:
-        return RedirectResponse(url="/admin/users?error=user_not_found", status_code=302)
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
+
+    success_html = """
+    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+        <p class="text-green-700 font-semibold">ロールを変更しました。</p>
+    </div>
+    """
     
-    return RedirectResponse(url="/admin/users?success=role_changed", status_code=302)
+    return HTMLResponse(content=success_html)
