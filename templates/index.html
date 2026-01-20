@@ -20,7 +20,8 @@
               <li><a href="/guide" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">受講案内</a></li>
               <li><a href="/mypage" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">マイページ</a></li>
               {% if current_user.can_manage %}
-              <li><a href="/admin" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">管理ダッシュボード</a></li>
+              <li><a href="/admin/users" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">管理画面</a></li>
+              <li><a href="/manual" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">運用マニュアル</a></li>
               {% endif %}
               <li><a href="/logout" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">ログアウト</a></li>
             </ul>

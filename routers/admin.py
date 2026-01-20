@@ -22,20 +22,6 @@ def require_manager(current_user: User | None) -> bool:
     """管理権限をチェック（管理者または運用者）"""
     return bool(current_user and current_user.can_manage)
 
-@router.get("", response_class=HTMLResponse)
-async def admin_dashboard(
-    request: Request,
-    current_user: User = Depends(get_current_user)
-):
-    """管理者ダッシュボード"""
-    if not require_manager(current_user):
-        return templates.TemplateResponse(
-            "error.html",
-            {"request": request, "message": "管理権限が必要です"},
-            status_code=403,
-        )
-    return templates.TemplateResponse("admin.html", {"request": request})
-
 @router.get("/users", response_class=HTMLResponse)
 async def admin_users_page(
     request: Request,
