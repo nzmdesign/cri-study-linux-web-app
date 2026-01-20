@@ -106,8 +106,8 @@ async def register_page(
         "organizations": organizations
     })
 
-@router.post("/register")
-async def register_user(
+@router.post("/register/confirm", response_class=HTMLResponse)
+async def register_confirm(
     request: Request,
     email: str = Form(...),
     password: str = Form(...),
@@ -118,7 +118,38 @@ async def register_user(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """ユーザー登録処理"""
+    """ユーザー登録確認ページ"""
+    if not require_manager(current_user):
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "管理権限が必要です"},
+            status_code=403,
+        )
+    
+    return templates.TemplateResponse("admin_register_confirm.html", {
+        "request": request,
+        "current_user": current_user,
+        "email": email,
+        "password": password,
+        "confirm_password": confirm_password,
+        "first_name": first_name,
+        "last_name": last_name,
+        "organization": organization
+    })
+
+@router.post("/register/execute")
+async def register_execute(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    confirm_password: str = Form(...),
+    first_name: str = Form(...),
+    last_name: str = Form(...),
+    organization: str = Form(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """ユーザー登録実行処理"""
     if not require_manager(current_user):
         return templates.TemplateResponse(
             "error.html",
@@ -130,12 +161,18 @@ async def register_user(
     
     error_msg = user_service.validate_registration(email, password, confirm_password, first_name, last_name, organization)
     if error_msg:
-        error_html = f"""
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <p class="text-red-700 font-semibold">エラー: {error_msg}</p>
-        </div>
-        """
-        return HTMLResponse(content=error_html)
+        # エラー時は確認ページをエラーメッセージ付きで再表示
+        return templates.TemplateResponse("admin_register_confirm.html", {
+            "request": request,
+            "current_user": current_user,
+            "email": email,
+            "password": password,
+            "confirm_password": confirm_password,
+            "first_name": first_name,
+            "last_name": last_name,
+            "organization": organization,
+            "error_message": error_msg
+        })
     
     try:
         user_service.create_user(
@@ -146,20 +183,29 @@ async def register_user(
             organization_name=organization
         )
         
-        success_html = """
-        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-            <p class="text-green-700 font-semibold">ユーザーを登録しました</p>
-        </div>
-        """
-        return HTMLResponse(content=success_html)
+        # 登録成功ページへ遷移
+        return templates.TemplateResponse("admin_register_success.html", {
+            "request": request,
+            "current_user": current_user,
+            "user_email": email,
+            "user_first_name": first_name,
+            "user_last_name": last_name,
+            "user_organization": organization
+        })
 
     except Exception as e:
-        error_html = """
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <p class="text-red-700 font-semibold">エラー: ユーザー登録に失敗しました</p>
-        </div>
-        """
-        return HTMLResponse(content=error_html)
+        # 例外発生時も確認ページをエラーメッセージ付きで再表示
+        return templates.TemplateResponse("admin_register_confirm.html", {
+            "request": request,
+            "current_user": current_user,
+            "email": email,
+            "password": password,
+            "confirm_password": confirm_password,
+            "first_name": first_name,
+            "last_name": last_name,
+            "organization": organization,
+            "error_message": "ユーザー登録に失敗しました"
+        })
 
 @router.get("/users/{user_id}/chpasswd", response_class=HTMLResponse)
 def change_password_page(

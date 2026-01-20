@@ -85,11 +85,11 @@ class UserService:
     ) -> str | None:
         """ユーザー登録のバリデーション（エラーコードを返す）"""
         if password != confirm_password:
-            return "password_mismatch"
+            return "パスワードが一致しません"
         if len(password) < 4:
-            return "password_too_short"
+            return "パスワードは4文字以上で入力してください"
         if self.user_repository.exists_by_email(email):
-            return "email_already_exists"
+            return "このメールアドレスは既に登録されています"
         if not self.organization_repository.get_by_name(organization_name):
-            return "organization_not_found"
+            return "指定された所属が見つかりません"
         return None
