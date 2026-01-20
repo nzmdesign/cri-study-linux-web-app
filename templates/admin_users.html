@@ -5,122 +5,94 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>CRI勉強会 - Linux入門</h1>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-6 py-8">
+        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
+        <nav class="border-t border-slate-200 pt-4">
+          <div class="flex justify-end items-center">
+            <ul class="flex gap-6">
+              <li><a href="/admin" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">管理ダッシュボード</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      {% set success_message = request.query_params.get('success') %}
-      {% set error_message = request.query_params.get('error') %}
-      
-      {% if success_message %}
-      <div style="padding: 15px; margin-bottom: 20px; background-color: #e8f5e8; color: #2d5a2d; border: 2px solid #28a745;">
-        <strong>成功:</strong>
-        {% if success_message == 'user_registered' %}
-          ユーザーが登録されました。        
-        {% elif success_message == 'password_changed' %}
-          パスワードが変更されました。
-        {% elif success_message == 'user_deleted' %}
-          ユーザーが削除されました。
-        {% elif success_message == 'role_changed' %}
-          ロールが変更されました。
-        {% else %}
-          {{ success_message }}
-        {% endif %}
+    <main class="flex-grow px-4 py-12">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
+          <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">ユーザー一覧 ({{ user_statuses|length }}人)</h2>
+          
+          {% if user_statuses %}
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="bg-slate-100 border-b-2 border-slate-300">
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">メールアドレス</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">氏名</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">所属</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">種別</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">受講状況</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">登録日時</th>
+                  {% if current_user.is_admin %}
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700">管理操作</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                {% for user_status in user_statuses %}
+                {% set user = user_status.user %}
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-4 py-3 text-sm text-slate-700">{{ user.email }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">{{ user.last_name }} {{ user.first_name }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-700">{{ user.organization_rel.name }}</td>
+                  <td class="px-4 py-3 text-sm">
+                    {% if user.role_id == 0 %}
+                      <span class="inline-block px-3 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">管理者</span>
+                    {% elif user.role_id == 2 %}
+                      <span class="inline-block px-3 py-1 text-xs font-semibold text-purple-800 bg-purple-100 rounded-full">運用者</span>
+                    {% else %}
+                      <span class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">受講者</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-4 py-3 text-sm">
+                    {% if user_status.status == '修了' %}
+                      <span class="inline-block px-3 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">修了 ({{ user_status.pass_count }}/{{ user_status.total_exams }})</span>
+                    {% else %}
+                      <span class="inline-block px-3 py-1 text-xs font-semibold text-slate-700 bg-slate-200 rounded-full">受講中 ({{ user_status.pass_count }}/{{ user_status.total_exams }})</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">{{ user.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+                  {% if current_user.is_admin %}
+                  <td class="px-4 py-3">
+                    <div class="flex flex-col gap-2">
+                      <a href="/admin/users/{{ user.id }}/chpasswd" class="text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center">パスワード変更</a>
+                      <a href="/admin/users/{{ user.id }}/userdel" class="text-xs bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center">ユーザー削除</a>
+                      <a href="/admin/users/{{ user.id }}/roleedit" class="text-xs bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center">ロール変更</a>
+                    </div>
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <p class="text-slate-600 text-center py-8">登録されているユーザーがありません。</p>
+          {% endif %}
+        </div>
       </div>
-      {% endif %}
-      
-      {% if error_message %}
-      <div style="padding: 15px; margin-bottom: 20px; background-color: #ffe8e8; color: #c41e3a; border: 2px solid #dc3545;">
-        <strong>エラー:</strong>
-        {% if error_message == 'cannot_change_own_role' %}
-          自分自身のロールは変更できません。
-        {% elif error_message == 'user_not_found' %}
-          ユーザーが見つかりません。
-        {% elif error_message == 'user_registration_failed' %}
-          ユーザー登録に失敗しました。
-        {% elif error_message == 'cannot_delete_self' %}
-          自分自身は削除できません。
-        {% elif error_message == 'cannot_delete_admin' %}
-          管理者ユーザーは削除できません。
-        {% else %}
-          {{ error_message }}
-        {% endif %}
-      </div>
-      {% endif %}
-      
-
-      <h2>ユーザー一覧 ({{ user_statuses|length }}人)</h2>
-      
-      {% if user_statuses %}
-      <div class="table-container">
-        <table class="users-table">
-          <thead>
-            <tr>
-              <th>メールアドレス</th>
-              <th>氏名</th>
-              <th>所属</th>
-              <th>種別</th>
-              <th>受講状況</th>
-              <th>登録日時</th>
-              {% if current_user.is_admin %}
-              <th>管理操作</th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for user_status in user_statuses %}
-            {% set user = user_status.user %}
-            <tr>
-              <td>{{ user.email }}</td>
-              <td>{{ user.last_name }} {{ user.first_name }}</td>
-              <td>{{ user.organization_rel.name }}</td>
-              <td>
-                {% if user.role_id == 0 %}
-                  <span class="admin-badge">管理者</span>
-                {% elif user.role_id == 2 %}
-                  <span class="operator-badge">運用者</span>
-                {% else %}
-                  <span class="user-badge">受講者</span>
-                {% endif %}
-              </td>
-              <td>
-                {% if user_status.status == '修了' %}
-                  <span class="complete-badge">修了 ({{ user_status.pass_count }}/{{ user_status.total_exams }})</span>
-                {% else %}
-                  <span class="progress-badge">受講中 ({{ user_status.pass_count }}/{{ user_status.total_exams }})</span>
-                {% endif %}
-              </td>
-              <td>{{ user.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
-              {% if current_user.is_admin %}
-              <td>
-                <div class="action-buttons">
-                  <a href="/admin/users/{{ user.id }}/chpasswd" class="btn-yellow">パスワード変更</a>
-                  <a href="/admin/users/{{ user.id }}/userdel" class="btn-red">ユーザー削除</a>
-                  <a href="/admin/users/{{ user.id }}/roleedit" class="btn-blue">ロール変更</a>
-                </div>
-              </td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-        <p>登録されているユーザーがありません。</p>
-      {% endif %}
     </main>
 
-    <footer>
-      <div class="footer-actions">
-          <a href="/admin" class="btn">管理ダッシュボードに戻る</a>
-      </div>
-      <p>&copy; CRI勉強会</p>
+    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
+      <a href="/admin" class="inline-block bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg transition-colors mb-4">管理ダッシュボードに戻る</a>
+      <p class="text-slate-600">&copy; CRI勉強会</p>
     </footer>
+
   </div>
 </body>
 </html>
