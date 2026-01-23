@@ -17,7 +17,7 @@
           <div class="flex justify-between items-center">
             <p class="text-slate-700 font-medium">こんにちは、{{ current_user.last_name }} {{ current_user.first_name }} さん</p>
             <ul class="flex gap-6">
-              <li><a href="/guide" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">受講案内</a></li>
+              <li><a href="https://github.com/xnterada/cri-study-fukuoka/blob/main/docs/linux/guide.md" target="_blank" rel="noopener noreferrer" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">受講案内</a></li>
               <li><a href="/mypage" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">マイページ</a></li>
               {% if current_user.can_manage %}
               <li><a href="/admin/users" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">管理画面</a></li>

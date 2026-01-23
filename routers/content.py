@@ -73,24 +73,6 @@ async def setup_page(
         "title": title
     })
 
-@router.get("/guide", response_class=HTMLResponse)
-async def guide_page(request: Request):
-    """受講案内ページ"""
-    content_service = ContentService()
-    html_content, title = content_service.get_guide_content()
-    
-    if not html_content:
-        return templates.TemplateResponse("error.html", {
-            "request": request,
-            "message": "ページが見つかりません"
-        }, status_code=404)
-    
-    return templates.TemplateResponse("content.html", {
-        "request": request,
-        "content": html_content,
-        "title": title
-    })
-
 @router.get("/manual", response_class=HTMLResponse)
 async def manual_page(
     request: Request,
