@@ -38,22 +38,6 @@ class ContentService:
             return html_content, title
         except Exception as e:
             return None, None
-    
-    def get_guide_content(self) -> tuple[str | None, str | None]:
-        """受講案内"""
-        file_path = "content/doc/guide.html"
-        
-        if not os.path.exists(file_path):
-            return None, None
-        
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                html_content = f.read()
-            
-            title = "受講案内"
-            return html_content, title
-        except Exception as e:
-            return None, None
 
     def get_manual_content(self) -> tuple[str | None, str | None]:
         """運用マニュアル"""
