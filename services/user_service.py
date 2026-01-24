@@ -5,6 +5,7 @@ from models.organization import Organization
 from repositories.user_repository import UserRepository
 from repositories.organization_repository import OrganizationRepository
 from services.auth_service import AuthService
+from utils.datetime_utils import to_jst
 
 class UserService:
     """ユーザーサービス"""
@@ -17,7 +18,11 @@ class UserService:
     
     def get_all_users(self) -> list[User]:
         """全ユーザーを取得"""
-        return self.user_repository.get_all()
+        all_users = []
+        for user in self.user_repository.get_all():
+            user.created_at = to_jst(user.created_at)
+            all_users.append(user)
+        return all_users
     
     def get_user_by_id(self, user_id: int) -> User | None:
         """IDでユーザーを取得"""

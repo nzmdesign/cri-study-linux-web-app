@@ -3,6 +3,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 from models.exam import ExamResult
 from repositories.exam_repository import ExamRepository
+from utils.datetime_utils import to_jst
 
 class ExamService:
     """試験サービス"""
@@ -74,7 +75,10 @@ class ExamService:
     
     def get_exam_result(self, user_id: int, exam_id: int, result_id: int) -> ExamResult | None:
         """試験結果を取得"""
-        return self.exam_repository.get_by_user_and_exam(user_id, exam_id, result_id)
+        result = self.exam_repository.get_by_user_and_exam(user_id, exam_id, result_id)
+        if result:
+            result.timestamp = to_jst(result.timestamp)
+        return result
     
     def get_user_exam_statuses(self, user_id: int) -> list[dict]:
         """ユーザーの全試験の受験状況を取得"""
@@ -101,8 +105,8 @@ class ExamService:
                     'status': status,
                     'correct_count': latest_result.correct_count,
                     'total_questions': latest_result.total_questions,
-                    'last_attempt': latest_result.timestamp,
-                    'pass_date': first_pass_result.timestamp if first_pass_result else None
+                    'last_attempt': to_jst(latest_result.timestamp),
+                    'pass_date': to_jst(first_pass_result.timestamp) if first_pass_result else None
                 })
             else:
                 exam_statuses.append({
@@ -120,7 +124,11 @@ class ExamService:
     
     def get_all_results(self) -> list[ExamResult]:
         """全試験結果を取得"""
-        return self.exam_repository.get_all()
+        all_results = []
+        for result in self.exam_repository.get_all():
+            result.timestamp = to_jst(result.timestamp)
+            all_results.append(result)
+        return all_results
     
     def calculate_user_progress(self, user_id: int) -> dict:
         """ユーザーの受講進捗を計算"""
