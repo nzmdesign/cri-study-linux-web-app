@@ -10,22 +10,10 @@
 </head>
 <body class="bg-gradient-to-br from-blue-100 via-cyan-50 to-indigo-200 min-h-screen flex flex-col">
   <div class="flex flex-col min-h-screen">
-    {% include 'components/header.html' %}
-
-    <nav class="sticky top-16 z-40 bg-white border-t border-slate-200 shadow-sm">
-      <div class="max-w-6xl mx-auto px-6 py-4">
-        <div class="flex justify-between items-center">
-          <ul class="flex gap-6">
-            <li><a href="/admin/users" class="text-slate-700 hover:text-slate-900 font-medium transition-colors border-b-2 border-transparent hover:border-b-blue-500 pb-1">ユーザー一覧</a></li>
-            <li><a href="/admin/register" class="text-slate-700 hover:text-slate-900 font-medium transition-colors border-b-2 border-transparent hover:border-b-blue-500 pb-1">ユーザー登録</a></li>
-            <li><a href="/admin/history" class="text-slate-700 hover:text-slate-900 font-medium transition-colors border-b-2 border-transparent hover:border-b-blue-500 pb-1">受験履歴</a></li>
-          </ul>
-          <ul class="flex gap-6">
-            <li><a href="/" class="text-slate-700 hover:text-slate-900 font-medium transition-colors border-b-2 border-transparent hover:border-b-blue-500 pb-1">トップに戻る</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <div class="sticky top-0 z-50">
+      {% include 'components/header.html' %}
+      {% include 'components/nav_admin.html' %}
+    </div>
 
     <main class="flex-grow px-4 py-12">
       <div class="w-full max-w-2xl mx-auto">

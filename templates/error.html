@@ -6,10 +6,14 @@
   <title>CRI勉強会 - Linux入門</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-100 via-cyan-50 to-indigo-200 min-h-screen flex flex-col">
   <div class="flex flex-col min-h-screen">
-    {% include 'components/header.html' %}
+    <div class="sticky top-0 z-50">
+      {% include 'components/header.html' %}
+      {% include 'components/nav_totop.html' %}
+    </div>
 
     <main class="flex-grow px-4 py-12 flex items-center justify-center">
       <div class="w-full max-w-2xl mx-auto">
