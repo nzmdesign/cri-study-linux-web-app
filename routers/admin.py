@@ -263,6 +263,14 @@ def change_password(
         """
         return HTMLResponse(content=error_html)
     
+    if len(new_password) < 4:
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: パスワードは4文字以上で入力してください。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
+    
     user_service = UserService(db)
     target_user = user_service.update_password(user_id, new_password)
     
