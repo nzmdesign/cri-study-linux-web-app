@@ -8,7 +8,7 @@ class ExamResult(Base):
     __tablename__ = "exam_results"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     exam_id = Column(Integer)
     exam_title = Column(String)
     correct_count = Column(Integer)
