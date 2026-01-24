@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CRI勉強会 - Linux入門</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-</head>
+{% include 'components/html_head.html' %}
 <body class="bg-gradient-to-br from-blue-100 via-cyan-50 to-indigo-200 min-h-screen flex flex-col">
   <div class="flex flex-col min-h-screen">
     <div class="sticky top-0 z-50">
@@ -19,7 +12,7 @@
       <div class="w-full max-w-6xl mx-auto">
         <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
           <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">受験履歴</h2>
-          
+
           {% if results %}
             <div class="overflow-x-auto">
               <table class="w-full">
