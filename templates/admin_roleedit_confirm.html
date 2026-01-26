@@ -11,7 +11,7 @@
     <main class="flex-grow px-4 py-12">
       <div class="w-full max-w-2xl mx-auto">
         <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
-          <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">ユーザーロール変更</h2>
+          <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">ユーザーロール変更 - 確認</h2>
 
           <div class="bg-slate-50 rounded-lg p-6 mb-8 border border-slate-200">
             <h3 class="text-lg font-semibold text-slate-700 mb-4">対象ユーザー</h3>
@@ -19,30 +19,31 @@
               <p class="text-slate-700"><span class="font-semibold">メールアドレス:</span> {{ target_user.email }}</p>
               <p class="text-slate-700"><span class="font-semibold">氏名:</span> {{ target_user.last_name }} {{ target_user.first_name }}</p>
               <p class="text-slate-700"><span class="font-semibold">所属:</span> {{ target_user.organization_rel.name }}</p>
-              <p class="text-slate-700"><span class="font-semibold">現在のロール:</span> {{ target_user.role.name }}</p>
             </div>
+          </div>
+
+          <div class="bg-blue-50 rounded-lg p-6 mb-8 border border-blue-200">
+            <h3 class="text-lg font-semibold text-slate-700 mb-4">ロール変更内容</h3>
+            <div class="space-y-2">
+              <p class="text-slate-700"><span class="font-semibold">変更前:</span> {{ current_role_name }}</p>
+              <p class="text-slate-700"><span class="font-semibold">変更後:</span> {{ new_role_name }}</p>
+            </div>
+          </div>
+
+          <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+            <p class="text-yellow-800 font-semibold">ℹ️ このユーザーのロールを変更してもよろしいですか？</p>
           </div>
 
           <div id="message-container"></div>
 
-          <form hx-post="/admin/users/{{ target_user.id }}/roleedit" hx-target="#message-container" hx-swap="innerHTML" class="space-y-5">
-            <div>
-              <label for="role_id" class="block text-sm font-semibold text-slate-700 mb-2">変更後のロール</label>
-              <select id="role_id" name="role_id" required
-                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all">
-                {% for role in roles %}
-                <option value="{{ role.id }}" {% if role.id == target_user.role_id %}selected{% endif %}>
-                  {{ role.name }}
-                </option>
-                {% endfor %}
-              </select>
-            </div>
+          <form hx-post="/admin/users/{{ target_user.id }}/roleedit/execute" hx-target="#message-container" hx-swap="innerHTML" class="space-y-5">
+            <input type="hidden" name="role_id" value="{{ new_role_id }}">
             
             <div class="flex gap-4 pt-4">
               <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
-                次へ（確認画面）
+                ロール変更を実行
               </button>
-              <a href="/admin/users" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-lg transition-colors text-center">
+              <a href="/admin/users" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-lg transition-colors text-center flex items-center justify-center">
                 キャンセル
               </a>
             </div>
