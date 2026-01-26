@@ -15,7 +15,8 @@ class ExamService:
     
     def _load_exam_data(self) -> dict:
         """試験データをJSONファイルから読み込み"""
-        exam_dir = Path("content/exam")
+        base_dir = Path(__file__).parent.parent
+        exam_dir = base_dir / "content" / "exam"
         exams = {}
         
         if not exam_dir.exists() or not exam_dir.is_dir():

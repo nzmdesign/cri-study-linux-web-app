@@ -9,7 +9,7 @@ from models.role import Role
 
 def load_config():
     """設定ファイルを読み込む"""
-    config_path = "config.json"
+    config_path = os.path.join(os.path.dirname(__file__), ".", "config.json")
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"設定ファイルが見つかりません: {config_path}")
     

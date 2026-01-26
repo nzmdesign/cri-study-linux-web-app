@@ -6,10 +6,12 @@ from pydantic import BaseModel
 from models.database import get_db
 from models.user import User
 from services.exam_service import ExamService
-from routers.auth import get_current_user
+from src.routers.auth_router import get_current_user
+import os
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 class Answer(BaseModel):
     question_id: int

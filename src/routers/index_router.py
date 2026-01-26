@@ -2,11 +2,12 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from models.user import User
-from routers.auth import get_current_user
+from src.routers.auth_router import get_current_user
+import os
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
-
+templates_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 @router.get("/", response_class=HTMLResponse)
 async def index(

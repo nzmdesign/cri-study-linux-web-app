@@ -5,9 +5,11 @@ from sqlalchemy.orm import Session
 from models.database import get_db
 from models.user import User
 from services.auth_service import AuthService
+import os
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 def get_current_user(request: Request, db: Session = Depends(get_db)) -> User | None:
     """Cookieから現在のユーザーを取得"""

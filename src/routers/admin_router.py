@@ -9,10 +9,12 @@ from services.user_service import UserService
 from services.exam_service import ExamService
 from repositories.organization_repository import OrganizationRepository
 from repositories.role_repository import RoleRepository
-from routers.auth import get_current_user
+from src.routers.auth_router import get_current_user
+import os
 
 router = APIRouter(prefix="/admin", tags=["admin"])
-templates = Jinja2Templates(directory="templates")
+templates_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 def require_admin(current_user: User | None) -> bool:
     """管理者権限をチェックして結果を返す"""
