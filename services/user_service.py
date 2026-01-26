@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from models.user import User
-from models.role import Role
-from models.organization import Organization
+from models.exam import ExamResult
 from repositories.user_repository import UserRepository
 from repositories.organization_repository import OrganizationRepository
 from services.auth_service import AuthService
@@ -76,6 +75,10 @@ class UserService:
         if user.is_admin:
             return "cannot_delete_admin"
         
+        # 受験履歴を先に削除
+        self.db.query(ExamResult).filter(ExamResult.user_id == user_id).delete()
+        
+        # ユーザーを削除
         self.user_repository.delete(user)
         return None
     

@@ -2,9 +2,9 @@ from fastapi import APIRouter, Request, Form, Depends, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from urllib.parse import quote
 from models.database import get_db
 from models.user import User
+from models.role import Role
 from services.user_service import UserService
 from services.exam_service import ExamService
 from repositories.organization_repository import OrganizationRepository
@@ -239,7 +239,7 @@ def change_password_page(
     })
 
 @router.post("/users/{user_id}/chpasswd")
-def change_password(
+def change_password_confirm(
     user_id: int,
     request: Request,
     new_password: str = Form(...),
@@ -247,7 +247,7 @@ def change_password(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """パスワード変更処理"""
+    """パスワード変更確認画面"""
     if not require_admin(current_user):
         return templates.TemplateResponse(
             "error.html",
@@ -255,6 +255,7 @@ def change_password(
             status_code=403,
         )
     
+    # バリデーションチェック
     if new_password != confirm_password:
         error_html = """
         <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
@@ -272,22 +273,53 @@ def change_password(
         return HTMLResponse(content=error_html)
     
     user_service = UserService(db)
+    target_user = user_service.get_user_by_id(user_id)
+
+    # 確認画面を表示
+    response = templates.TemplateResponse("admin_chpasswd_confirm.html", {
+        "request": request,
+        "current_user": current_user,
+        "target_user": target_user,
+        "new_password": new_password,
+        "confirm_password": confirm_password
+    })
+    response.headers["HX-Retarget"] = "body"
+    response.headers["HX-Reswap"] = "innerHTML"
+    return response
+
+@router.post("/users/{user_id}/chpasswd/execute")
+def change_password_execute(
+    user_id: int,
+    request: Request,
+    new_password: str = Form(...),
+    confirm_password: str = Form(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """パスワード変更実行処理"""
+    if not require_admin(current_user):
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "管理者のみアクセス可能"},
+            status_code=403,
+        )
+    
+    user_service = UserService(db)
     target_user = user_service.update_password(user_id, new_password)
     
     if not target_user:
-        error_html = """
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
-        </div>
-        """
-        return HTMLResponse(content=error_html)
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "ユーザーが見つかりません"},
+            status_code=404
+        )
     
-    success_html = """
-    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-        <p class="text-green-700 font-semibold">パスワードを変更しました。</p>
-    </div>
-    """
-    return HTMLResponse(content=success_html)
+    # 成功画面を表示
+    return templates.TemplateResponse("admin_chpasswd_success.html", {
+        "request": request,
+        "current_user": current_user,
+        "target_user": target_user
+    })
 
 @router.get("/users/{user_id}/userdel", response_class=HTMLResponse)
 def delete_user_page(
@@ -321,13 +353,13 @@ def delete_user_page(
     })
 
 @router.post("/users/{user_id}/userdel")
-def delete_user(
+def delete_user_execute(
     user_id: int,
     request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """ユーザー削除処理"""
+    """ユーザー削除実行処理"""
     if not require_admin(current_user):
         return templates.TemplateResponse(
             "error.html",
@@ -336,24 +368,58 @@ def delete_user(
         )
     
     user_service = UserService(db)
-    error_code = user_service.delete_user(user_id, current_user.id)
+    target_user = user_service.get_user_by_id(user_id)
     
-    if error_code:
-        error_messages = {
-            "cannot_delete_self": "自分自身を削除することはできません。",
-            "user_not_found": "ユーザーが見つかりません。"
-        }
-        error_msg = error_messages.get(error_code, error_code)
-        error_html = f"""
+    if not target_user:
+        error_html = """
         <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <p class="text-red-700 font-semibold">エラー: {error_msg}</p>
+            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
         </div>
         """
         return HTMLResponse(content=error_html)
     
-    return HTMLResponse(
-        content='<div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6"><p class="text-green-700 font-semibold">ユーザーを削除しました。</p></div>'
-    )
+    # 削除前にユーザー情報を保存
+    deleted_user_email = target_user.email
+    deleted_user_first_name = target_user.first_name
+    deleted_user_last_name = target_user.last_name
+    
+    error_code = user_service.delete_user(user_id, current_user.id)
+
+    if error_code == "cannot_delete_self":
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: 自分自身を削除することはできません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
+        
+    elif error_code == "cannot_delete_admin":
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: 管理者ユーザーは削除できません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
+    
+    elif error_code == "user_not_found":
+        error_html = """
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
+        </div>
+        """
+        return HTMLResponse(content=error_html)
+    
+    # 成功画面を表示
+    response = templates.TemplateResponse("admin_userdel_success.html", {
+        "request": request,
+        "current_user": current_user,
+        "deleted_user_email": deleted_user_email,
+        "deleted_user_first_name": deleted_user_first_name,
+        "deleted_user_last_name": deleted_user_last_name
+    })    
+    response.headers["HX-Retarget"] = "body"
+    response.headers["HX-Reswap"] = "innerHTML"
+    return response
 
 @router.get("/users/{user_id}/roleedit")
 def edit_role_page(
@@ -392,14 +458,14 @@ def edit_role_page(
     })
 
 @router.post("/users/{user_id}/roleedit")
-def edit_role(
+def edit_role_confirm(
     user_id: int,
     request: Request,
     role_id: int = Form(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """ロール変更処理"""
+    """ロール変更確認画面"""
     if not require_admin(current_user):
         return templates.TemplateResponse(
             "error.html",
@@ -407,6 +473,7 @@ def edit_role(
             status_code=403,
         )
     
+    # 自分自身のロール変更チェック
     if user_id == current_user.id:
         error_html = """
         <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
@@ -416,20 +483,57 @@ def edit_role(
         return HTMLResponse(content=error_html)
     
     user_service = UserService(db)
+    target_user = user_service.get_user_by_id(user_id)
+    
+    # 新しいロールを取得
+    new_role = db.query(Role).filter(Role.id == role_id).first()
+    
+    # 確認画面を表示
+    response = templates.TemplateResponse("admin_roleedit_confirm.html", {
+        "request": request,
+        "current_user": current_user,
+        "target_user": target_user,
+        "current_role_name": target_user.role.name,
+        "new_role_id": role_id,
+        "new_role_name": new_role.name
+    })
+    response.headers["HX-Retarget"] = "body"
+    response.headers["HX-Reswap"] = "innerHTML"
+    return response
+
+@router.post("/users/{user_id}/roleedit/execute")
+def edit_role_execute(
+    user_id: int,
+    request: Request,
+    role_id: int = Form(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """ロール変更実行処理"""
+    if not require_admin(current_user):
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "管理者のみアクセス可能"},
+            status_code=403,
+        )
+    
+    user_service = UserService(db)    
     updated_user = user_service.update_user_role(user_id, role_id)
     
     if not updated_user:
         error_html = """
         <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <p class="text-red-700 font-semibold">エラー: ユーザーが見つかりません。</p>
+            <p class="text-red-700 font-semibold">エラー: ロールの変更に失敗しました。</p>
         </div>
         """
         return HTMLResponse(content=error_html)
-
-    success_html = """
-    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
-        <p class="text-green-700 font-semibold">ロールを変更しました。</p>
-    </div>
-    """
     
-    return HTMLResponse(content=success_html)
+    # 成功画面を表示
+    response = templates.TemplateResponse("admin_roleedit_success.html", {
+        "request": request,
+        "current_user": current_user,
+        "target_user": updated_user
+    })    
+    response.headers["HX-Retarget"] = "body"
+    response.headers["HX-Reswap"] = "innerHTML"
+    return response

@@ -1,26 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRI勉強会 - Linux入門</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
+{% include 'components/html_head.html' %}
 <body class="bg-gradient-to-br from-blue-100 via-cyan-50 to-indigo-200 min-h-screen flex flex-col">
   <div class="flex flex-col min-h-screen">
-    <header class="sticky top-0 z-50 bg-white shadow-sm">
-      <div class="max-w-6xl mx-auto px-6 py-4">
-        <h1 class="text-4xl font-bold text-slate-800 mb-6">CRI勉強会 Linux入門</h1>
-        <nav class="border-t border-slate-200 pt-4">
-          <div class="flex justify-end items-center">
-            <ul class="flex gap-6">
-              <li><a href="/" class="text-slate-700 hover:text-cyan-600 font-medium transition-colors">トップに戻る</a></li>
-            </ul>
-          </div>
-        </nav>
-      </div>
-    </header>
+    <div class="sticky top-0 z-50">
+      {% include 'components/header.html' %}
+      {% include 'components/nav_totop.html' %}
+    </div>
 
     <main class="flex-grow flex items-center justify-center px-4 py-12">
       <div class="w-full max-w-2xl">
@@ -53,10 +39,8 @@
       </div>
     </main>
 
-    <footer class="bg-white border-t border-slate-200 text-center py-6 mt-auto">
-      <a href="/" class="inline-block bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 px-6 rounded-lg transition-colors mb-4">トップに戻る</a>
-      <p class="text-slate-600">&copy; CRI勉強会</p>
-    </footer>
+    {% include 'components/footer.html' %}
+
   </div>
 </body>
 </html>
