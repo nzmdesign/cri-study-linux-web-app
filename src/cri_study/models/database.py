@@ -1,9 +1,11 @@
+from pathlib import Path
 from sqlalchemy import create_engine, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-DATABASE_URL = "sqlite:///./app.db"
+DB_PATH = Path(__file__).parent.parent / "app.db"
+DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(
     DATABASE_URL,
