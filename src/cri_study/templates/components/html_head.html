@@ -5,4 +5,25 @@
   <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.png') }}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const hamburgerToggle = document.getElementById('hamburger-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (hamburgerToggle && mobileMenu) {
+        hamburgerToggle.addEventListener('click', function() {
+          hamburgerToggle.classList.toggle('active');
+          mobileMenu.classList.toggle('active');
+        });
+        
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            hamburgerToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+          });
+        });
+      }
+    });
+  </script>
 </head>

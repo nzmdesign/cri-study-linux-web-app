@@ -4,8 +4,38 @@
     header + nav {
       margin-top: -1px;
     }
+    
+    /* ハンバーガーメニューのアニメーション */
+    .hamburger-icon span {
+      display: block;
+      width: 20px;
+      height: 2.5px;
+      background-color: #1e293b;
+      margin: 3.5px 0;
+      transition: 0.3s;
+      transform-origin: center;
+    }
+    
+    .hamburger-icon.active span:nth-child(1) {
+      transform: translateY(9px) rotate(-45deg);
+    }
+    
+    .hamburger-icon.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger-icon.active span:nth-child(3) {
+      transform: translateY(-9px) rotate(45deg);
+    }
   </style>
   <div class="max-w-6xl mx-auto px-6 py-2">
-    <h1 class="text-3xl font-bold text-slate-800 mb-2">CRI勉強会 Linux入門</h1>
+    <div class="flex justify-between items-center">
+      <h1 class="text-lg sm:text-2xl md:text-3xl font-bold text-slate-800 mb-2">CRI勉強会 Linux入門</h1>
+      <button class="hamburger-icon md:hidden w-8 h-8 flex flex-col justify-center items-center cursor-pointer" id="hamburger-toggle" aria-label="メニュー">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </div>
 </header>
