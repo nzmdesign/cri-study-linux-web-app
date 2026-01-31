@@ -32,6 +32,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no ${{ vars.EC2_USER }}@${{ steps.resolve_ec2.outputs.EC2_HOST }} "
           cd /var/www/cri-study-linux-web-app &&
           git pull &&
-          /var/www/cri-study-linux-web-app/venv/bin/pip install -r requirements.txt &&
+          if [ ! -d .venv ]; then python3.11 -m venv .venv; fi &&
+          .venv/bin/pip install -r requirements.txt &&
           sudo systemctl restart fastapi_app
         "
