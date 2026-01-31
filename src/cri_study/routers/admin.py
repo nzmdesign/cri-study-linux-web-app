@@ -167,7 +167,55 @@ def change_password_page(
     current_user: User = Depends(require_admin),
     user_service: UserService = Depends(get_user_service),
 ):
-    """パスワード変更ページ"""
+    """パスワード変更ページ（旧：直接アクセス用）"""
+    target_user = user_service.get_user_by_id(user_id)
+    
+    if not target_user:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "ユーザーが見つかりません"},
+            status_code=404
+        )
+    
+    return templates.TemplateResponse("admin_chpasswd.html", {
+        "request": request,
+        "current_user": current_user,
+        "target_user": target_user
+    })
+
+
+@router.get("/users/{user_id}/mod", response_class=HTMLResponse)
+async def mod_user_page(
+    user_id: int,
+    request: Request,
+    current_user: User = Depends(require_admin),
+    user_service: UserService = Depends(get_user_service),
+):
+    """ユーザー情報変更ページ"""
+    target_user = user_service.get_user_by_id(user_id)
+    
+    if not target_user:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "ユーザーが見つかりません"},
+            status_code=404
+        )
+    
+    return templates.TemplateResponse("admin_usermod.html", {
+        "request": request,
+        "current_user": current_user,
+        "target_user": target_user
+    })
+
+
+@router.get("/users/{user_id}/chpasswd", response_class=HTMLResponse)
+def change_password_page(
+    user_id: int,
+    request: Request,
+    current_user: User = Depends(require_admin),
+    user_service: UserService = Depends(get_user_service),
+):
+    """パスワード変更ページ（旧：直接アクセス用）"""
     target_user = user_service.get_user_by_id(user_id)
     
     if not target_user:

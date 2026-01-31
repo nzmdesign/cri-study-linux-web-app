@@ -8,24 +8,24 @@
       {% include 'components/nav_main.html' %}
     </div>
 
-    <main class="flex-grow px-4 py-12">
+    <main class="flex-grow px-3 sm:px-4 py-6 sm:py-12">
       <div class="w-full max-w-4xl mx-auto">
-        <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
-          <h2 class="text-3xl font-bold text-slate-800 mb-6 border-b-2 border-blue-500 pb-3">{{ exam.title }}</h2>
+        <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-slate-100">
+          <h2 class="text-xl sm:text-3xl font-bold text-slate-800 mb-4 sm:mb-6 border-b-2 border-blue-500 pb-2 sm:pb-3">{{ exam.title }}</h2>
           
-          <p class="text-slate-700 mb-6">以下の全ての問題に回答して「送信」を押すと採点されて結果が表示されます。</p>
+          <p class="text-xs sm:text-sm text-slate-700 mb-4 sm:mb-6">以下の全ての問題に回答して「送信」を押すと採点されて結果が表示されます。</p>
 
             <form method="post" action="/exam/{{ exam_id }}/submit">
               {% for q in exam.questions %}
-              <div class="bg-slate-50 rounded-lg p-6 mb-6 border border-slate-200">
-                <div class="text-lg font-semibold text-blue-600 mb-3">問題 {{ loop.index }}</div>
-                <div class="text-slate-800 font-medium mb-4">{{ q.question }}</div>
-                <div class="space-y-3">
+              <div class="bg-slate-50 rounded-lg p-3 sm:p-6 mb-4 sm:mb-6 border border-slate-200">
+                <div class="text-base sm:text-lg font-semibold text-blue-600 mb-2 sm:mb-3">問題 {{ loop.index }}</div>
+                <div class="text-xs sm:text-sm text-slate-800 font-medium mb-3 sm:mb-4">{{ q.question }}</div>
+                <div class="space-y-2 sm:space-y-3">
                   {% for opt in q.options %}
-                  <div class="flex items-center">
+                  <div class="flex items-start">
                     <input type="radio" name="answer_{{ q.id }}" id="q-{{ q.id }}-opt-{{ loop.index0 }}" value="{{ loop.index0 }}" required
-                      class="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2">
-                    <label for="q-{{ q.id }}-opt-{{ loop.index0 }}" class="ml-3 text-slate-700 cursor-pointer hover:text-slate-900">
+                      class="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2 mt-0.5">
+                    <label for="q-{{ q.id }}-opt-{{ loop.index0 }}" class="ml-2 sm:ml-3 text-xs sm:text-sm text-slate-700 cursor-pointer hover:text-slate-900">
                       <span class="font-semibold">{{ ['A','B','C','D'][loop.index0] }}.</span> {{ opt }}
                     </label>
                   </div>
@@ -34,8 +34,8 @@
               </div>
               {% endfor %}
 
-              <div class="mt-8 text-center">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-all shadow-md hover:shadow-lg">
+              <div class="mt-6 sm:mt-8 text-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
                   送信
                 </button>
               </div>

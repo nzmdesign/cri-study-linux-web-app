@@ -55,11 +55,7 @@
                   <td class="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">{{ user.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
                   {% if current_user.is_admin %}
                   <td class="px-4 py-3">
-                    <div class="flex flex-col gap-2">
-                      <a href="/admin/users/{{ user.id }}/chpasswd" class="text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center">パスワード変更</a>
-                      <a href="/admin/users/{{ user.id }}/userdel" class="text-xs bg-red-500 hover:bg-red-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center">ユーザー削除</a>
-                      <a href="/admin/users/{{ user.id }}/roleedit" class="text-xs bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center">ロール変更</a>
-                    </div>
+                    <a href="/admin/users/{{ user.id }}/mod" class="text-xs bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1.5 px-3 rounded transition-colors text-center inline-block">ユーザー情報変更</a>
                   </td>
                   {% endif %}
                 </tr>

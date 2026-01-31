@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+{% include 'components/html_head.html' %}
+<body class="bg-gradient-to-br from-blue-100 via-cyan-50 to-indigo-200 min-h-screen flex flex-col">
+  <div class="flex flex-col min-h-screen">
+    <div class="sticky top-0 z-50">
+      {% include 'components/header.html' %}
+      {% include 'components/nav_admin.html' %}
+    </div>
+
+    <main class="flex-grow px-3 sm:px-4 py-6 sm:py-12">
+      <div class="w-full max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-slate-100">
+          <h2 class="text-xl sm:text-3xl font-bold text-slate-800 mb-4 sm:mb-6 border-b-2 border-blue-500 pb-2 sm:pb-3">ユーザー情報変更</h2>
+          
+          <!-- ユーザー情報表示 -->
+          <h3 class="text-lg font-semibold text-slate-700 mb-4">対象ユーザー</h3>
+          <div class="bg-slate-50 rounded-lg p-6 space-y-3 mb-8">
+            <p class="text-slate-700"><span class="font-semibold">メールアドレス:</span> {{ target_user.email }}</p>
+            <p class="text-slate-700"><span class="font-semibold">氏名:</span> {{ target_user.last_name }} {{ target_user.first_name }}</p>
+            <p class="text-slate-700"><span class="font-semibold">所属:</span> {{ target_user.organization_rel.name }}</p>
+            <p class="text-slate-700"><span class="font-semibold">ロール:</span> {{ target_user.role.name }}</p>
+          </div>
+
+          <!-- 管理操作 -->
+          <div class="mb-6 sm:mb-8">
+            <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-3">管理操作</h3>
+            <div class="flex flex-col gap-2 items-start">
+              <a href="/admin/users/{{ target_user.id }}/chpasswd" class="bg-white hover:bg-slate-50 text-slate-700 font-medium py-2 px-4 rounded border border-slate-300 hover:border-slate-400 transition-colors text-sm">
+                パスワード変更
+              </a>
+              <a href="/admin/users/{{ target_user.id }}/roleedit" class="bg-white hover:bg-slate-50 text-slate-700 font-medium py-2 px-4 rounded border border-slate-300 hover:border-slate-400 transition-colors text-sm">
+                ロール変更
+              </a>
+              <a href="/admin/users/{{ target_user.id }}/userdel" class="bg-white hover:bg-red-50 text-red-600 font-medium py-2 px-4 rounded border border-red-300 hover:border-red-400 transition-colors text-sm">
+                ユーザー削除
+              </a>
+            </div>
+          </div>
+
+          <!-- 戻るボタン -->
+          <div class="text-center">
+            <a href="/admin/users" class="inline-block bg-slate-500 hover:bg-slate-600 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-all shadow-md hover:shadow-lg text-sm sm:text-base">
+              ユーザー一覧に戻る
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+
+  </div>
+</body>
+</html>

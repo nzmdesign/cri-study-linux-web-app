@@ -41,9 +41,9 @@
             
             <div class="flex gap-4 pt-4">
               <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
-                ロール変更を実行
+                ロールを変更
               </button>
-              <a href="/admin/users" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-lg transition-colors text-center flex items-center justify-center">
+              <a href="/admin/users/{{ target_user.id }}/edit" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-4 rounded-lg transition-colors text-center flex items-center justify-center">
                 キャンセル
               </a>
             </div>
