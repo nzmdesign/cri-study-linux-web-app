@@ -1,9 +1,12 @@
+import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+
+sys.path.insert(0, str(Path(__file__).parent))
 
 from init_database import initialize_database
 from routers import admin_router, auth_router, exam_router, health_router, index_router
