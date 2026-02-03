@@ -28,22 +28,14 @@ def get_current_user(
 
 
 def require_authenticated(current_user: User | None = Depends(get_current_user)) -> User:
-    """認証必須（ログイン済みユーザーのみ）
-    
-    未認証の場合は /login にリダイレクト
-    テスト時は get_current_user をオーバーライドすることでモックユーザーを注入可能
-    """
+    """ログイン済みユーザー認証"""
     if not current_user:
         raise UnauthenticatedException()
     return current_user
 
 
 def require_admin(current_user: User | None = Depends(get_current_user)) -> User:
-    """管理者権限をチェックする依存性
-    
-    テスト時は get_current_user をオーバーライドすることで
-    モックユーザーを簡単に注入できる
-    """
+    """ログイン済みユーザー認証と管理者権限をチェックする"""
     if not current_user:
         raise UnauthenticatedException()
     if not current_user.is_admin:
@@ -52,11 +44,7 @@ def require_admin(current_user: User | None = Depends(get_current_user)) -> User
 
 
 def require_manager(current_user: User | None = Depends(get_current_user)) -> User:
-    """管理権限をチェックする依存性（管理者または運用者）
-    
-    テスト時は get_current_user をオーバーライドすることで
-    モックユーザーを簡単に注入できる
-    """
+    """ログイン済みユーザー認証と管理権限をチェックする"""
     if not current_user:
         raise UnauthenticatedException()
     if not current_user.can_manage:
