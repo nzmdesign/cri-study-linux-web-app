@@ -1,7 +1,6 @@
 from pathlib import Path
 from sqlalchemy import create_engine, event
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import StaticPool
 
 DB_PATH = Path(__file__).parent.parent / "app.db"
