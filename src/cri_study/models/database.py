@@ -1,10 +1,16 @@
+import os
 from pathlib import Path
 from sqlalchemy import create_engine, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-DB_PATH = Path(__file__).parent.parent / "app.db"
+
+db_path_str = os.getenv("DB_PATH")
+if db_path_str is None:
+    raise RuntimeError("環境変数 DB_PATH が設定されていません")
+DB_PATH = Path(db_path_str)
+
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(

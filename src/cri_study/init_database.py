@@ -1,5 +1,6 @@
 import bcrypt
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -11,7 +12,11 @@ from models.user import User
 
 def load_config():
     """設定ファイルを読み込む"""
-    config_path = Path(__file__).parent / "config.json"
+    config_path_str = os.getenv("CONFIG_PATH")
+    if config_path_str is None:
+        raise RuntimeError("環境変数 CONFIG_PATH が設定されていません")
+    config_path = Path(config_path_str)
+    
     if not config_path.exists():
         raise FileNotFoundError(f"設定ファイルが見つかりません: {config_path}")
 
