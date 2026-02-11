@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cri-study-linux-web
+    expose:
+      - "8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DB_PATH=/app/data/app.db
+      - CONFIG_PATH=/app/data/config.json
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: cri-study-linux-web-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  data:
