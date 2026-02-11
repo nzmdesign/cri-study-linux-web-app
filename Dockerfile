@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY --chown=appuser:appuser src/ ./src/
-COPY --chown=appuser:appuser --chmod=755 entrypoint.sh /entrypoint.sh
+COPY --chown=appuser:appuser --chmod=755 scripts/entrypoint.sh /entrypoint.sh
 
 RUN mkdir -p /app/data && \
     chown -R appuser:appuser /app/data
