@@ -34,5 +34,20 @@ jobs:
           git pull &&
           if [ ! -d .venv ]; then python3.11 -m venv .venv; fi &&
           .venv/bin/pip install -r requirements.txt &&
-          sudo systemctl restart fastapi_app
+          sudo systemctl restart fastapi_app &&
+          sudo systemctl start nginx
+        "
+
+    - name: Setup SSL Certificate
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.EC2_USER }}@${{ steps.resolve_ec2.outputs.EC2_HOST }} "
+          if [ ! -d /etc/letsencrypt/live/${{ vars.EC2_HOSTNAME }} ]; then
+            sudo certbot --nginx -d ${{ vars.EC2_HOSTNAME }} --non-interactive --agree-tos -m webmaster@${{ vars.EC2_HOSTNAME }}
+          fi
+        "
+
+    - name: Upload fallback page to S3
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.EC2_USER }}@${{ steps.resolve_ec2.outputs.EC2_HOST }} "
+          aws s3 cp /var/www/cri-study-linux-web-app/fallback/index.html ${{ vars.S3_FALLBACK_URI }}
         "
