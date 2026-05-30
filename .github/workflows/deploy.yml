@@ -38,10 +38,11 @@ jobs:
           cd /var/www/cri-study-linux-web-app &&
           if [ ! -d .venv ]; then python3.11 -m venv .venv; fi &&
           .venv/bin/pip install -r requirements.txt &&
-          echo "ADMIN_INITIAL_PASSWORD=${{ secrets.ADMIN_INITIAL_PASSWORD }}" | sudo tee /etc/fastapi_app.env > /dev/null &&
+          echo \"ADMIN_INITIAL_PASSWORD=${{ secrets.ADMIN_INITIAL_PASSWORD }}\" | sudo tee /etc/fastapi_app.env > /dev/null &&
           sudo chmod 600 /etc/fastapi_app.env &&
+          sudo systemctl daemon-reload &&
           sudo systemctl restart fastapi_app &&
-          sudo sed -i "s/DOMAIN_NAME/${{ vars.EC2_HOSTNAME }}/" /etc/nginx/conf.d/default.conf &&
+          sudo sed -i \"s/DOMAIN_NAME/${{ vars.EC2_HOSTNAME }}/\" /etc/nginx/conf.d/default.conf &&
           sudo systemctl start nginx
         "
 
