@@ -13,7 +13,8 @@ from routers import admin_router, auth_router, exam_router, health_router, index
 from utils.auth import ForbiddenException, UnauthenticatedException
 from utils.template import templates
 
-
+# 今のコードだとワーカー数が2以上だとデータベースの初期化が複数回走るので
+# systemdのUnitファイルでワーカー数を1に制限している
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """アプリケーションのライフサイクル管理"""
