@@ -27,24 +27,40 @@ jobs:
         EC2_HOSTNAME=$(getent hosts "$EC2_HOSTNAME" | awk '{print $1}')
         echo "EC2_HOSTNAME=${EC2_HOSTNAME}" >> "$GITHUB_OUTPUT"
 
-    - name: Deploy to EC2
+    - name: Clone or pull repository
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} "
-          if [ ! -d /var/www/cri-study-linux-web-app/.git ]; then
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} \
+          "if [ ! -d /var/www/cri-study-linux-web-app/.git ]; then
             git clone https://github.com/${{ github.repository }}.git /var/www/cri-study-linux-web-app
           else
-            cd /var/www/cri-study-linux-web-app && git pull
+            git -C /var/www/cri-study-linux-web-app pull
+          fi"
+
+    - name: Install dependencies
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} \
+          "if [ ! -d /var/www/cri-study-linux-web-app/.venv ]; then
+            python3.11 -m venv /var/www/cri-study-linux-web-app/.venv
           fi &&
-          cd /var/www/cri-study-linux-web-app &&
-          if [ ! -d .venv ]; then python3.11 -m venv .venv; fi &&
-          .venv/bin/pip install -r requirements.txt &&
-          echo \"ADMIN_INITIAL_PASSWORD=${{ secrets.ADMIN_INITIAL_PASSWORD }}\" | sudo tee /etc/fastapi_app.env > /dev/null &&
-          sudo chmod 600 /etc/fastapi_app.env &&
-          sudo systemctl daemon-reload &&
+          /var/www/cri-study-linux-web-app/.venv/bin/pip install -r /var/www/cri-study-linux-web-app/requirements.txt"
+
+    - name: Configure environment
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} \
+          "echo 'ADMIN_INITIAL_PASSWORD=${{ secrets.ADMIN_INITIAL_PASSWORD }}' | sudo tee /etc/fastapi_app.env > /dev/null &&
+          sudo chmod 600 /etc/fastapi_app.env"
+
+    - name: Configure nginx
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} \
+          "sudo sed -i 's/DOMAIN_NAME/${{ vars.EC2_HOSTNAME }}/' /etc/nginx/conf.d/default.conf"
+
+    - name: Restart services
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} \
+          "sudo systemctl daemon-reload &&
           sudo systemctl restart fastapi_app &&
-          sudo sed -i \"s/DOMAIN_NAME/${{ vars.EC2_HOSTNAME }}/\" /etc/nginx/conf.d/default.conf &&
-          sudo systemctl start nginx
-        "
+          sudo systemctl start nginx"
 
     - name: Setup SSL Certificate
       run: |
