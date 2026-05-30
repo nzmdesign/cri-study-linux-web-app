@@ -43,7 +43,7 @@ jobs:
           "cd /var/www/cri-study-linux-web-app &&
           if [ ! -d .venv ]; then
             python3.11 -m venv .venv
-          fi &&
+          fi && ls -la &&
           .venv/bin/pip install -r requirements.txt"
 
     - name: Configure environment
