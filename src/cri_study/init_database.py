@@ -120,7 +120,10 @@ def init_admin_user():
 
             # 必須フィールドの確認
             required_fields = ["email", "first_name", "last_name", "organization_id"]
-            missing_fields = [field for field in required_fields if not admin_config.get(field)]
+            missing_fields = [
+                field for field in required_fields 
+                if admin_config.get(field) is None or admin_config.get(field) == ""
+            ]
 
             if missing_fields:
                 print(f"エラー: 設定ファイルに必須フィールドが不足しています: {', '.join(missing_fields)}")
