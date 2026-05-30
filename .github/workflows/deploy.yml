@@ -31,7 +31,7 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} "
           if [ ! -d /var/www/cri-study-linux-web-app/.git ]; then
-            git clone ${{ vars.REPO_URL }} /var/www/cri-study-linux-web-app
+            git clone https://github.com/${{ github.repository }}.git /var/www/cri-study-linux-web-app
           else
             cd /var/www/cri-study-linux-web-app && git pull
           fi &&
