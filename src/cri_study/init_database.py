@@ -1,5 +1,6 @@
 import bcrypt
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -118,7 +119,7 @@ def init_admin_user():
                 sys.exit(1)
 
             # 必須フィールドの確認
-            required_fields = ["email", "first_name", "last_name", "organization_id", "password"]
+            required_fields = ["email", "first_name", "last_name", "organization_id"]
             missing_fields = [field for field in required_fields if not admin_config.get(field)]
 
             if missing_fields:
@@ -131,7 +132,11 @@ def init_admin_user():
 
         # 管理者ユーザーを作成
         try:
-            hashed_password = bcrypt.hashpw(admin_config["password"].encode("utf-8"), bcrypt.gensalt())
+            admin_password = os.environ.get("ADMIN_INITIAL_PASSWORD")
+            if not admin_password:
+                print("警告: ADMIN_INITIAL_PASSWORD が未設定のため管理者ユーザーの作成をスキップします")
+                return
+            hashed_password = bcrypt.hashpw(admin_password.encode("utf-8"), bcrypt.gensalt())
             admin_user = User(
                 username=admin_config["email"],
                 email=admin_config["email"],
