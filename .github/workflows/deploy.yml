@@ -18,21 +18,36 @@ jobs:
     - name: Install SSH key
       uses: webfactory/ssh-agent@v0.8.0
       with:
-        ssh-private-key: ${{ secrets.EC2_KEY }}
+        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
     
     - name: Resolve EC2 hostname to IP
       id: resolve_ec2
       run: |
         EC2_HOSTNAME=${{ vars.EC2_HOSTNAME }}
-        EC2_HOST=$(getent hosts "$EC2_HOSTNAME" | awk '{print $1}')
-        echo "EC2_HOST=${EC2_HOST}" >> "$GITHUB_OUTPUT"
+        EC2_HOSTNAME=$(getent hosts "$EC2_HOSTNAME" | awk '{print $1}')
+        echo "EC2_HOSTNAME=${EC2_HOSTNAME}" >> "$GITHUB_OUTPUT"
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ vars.EC2_USER }}@${{ steps.resolve_ec2.outputs.EC2_HOST }} "
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} "
           cd /var/www/cri-study-linux-web-app &&
           git pull &&
           if [ ! -d .venv ]; then python3.11 -m venv .venv; fi &&
           .venv/bin/pip install -r requirements.txt &&
-          sudo systemctl restart fastapi_app
+          sudo systemctl restart fastapi_app &&
+          sudo systemctl start nginx
+        "
+
+    - name: Setup SSL Certificate
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} "
+          if [ ! -d /etc/letsencrypt/live/${{ vars.EC2_HOSTNAME }} ]; then
+            sudo certbot --nginx -d ${{ vars.EC2_HOSTNAME }} --non-interactive --agree-tos -m webmaster@${{ vars.EC2_HOSTNAME }}
+          fi
+        "
+
+    - name: Upload fallback page to S3
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ vars.DEPLOY_USERNAME }}@${{ steps.resolve_ec2.outputs.EC2_HOSTNAME }} "
+          aws s3 cp /var/www/cri-study-linux-web-app/fallback/index.html s3://${{ vars.FALLBACK_S3_BUCKET }}/index.html
         "
