@@ -9,7 +9,7 @@
     {"id": 1, "name": "福岡"},
     {"id": 2, "name": "大阪"}
   ],
-  "github_repo_url": "https://github.com/xnterada/cri-study-linux-web-app-text",
+  "github_repo_url": "https://github.com/xnterada/cri-study-linux-web-text",
   "admin_user": {
     "email": "admin@cri-me.com",
     "last_name": "山田",
